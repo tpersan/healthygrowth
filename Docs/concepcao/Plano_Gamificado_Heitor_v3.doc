@@ -1,0 +1,286 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<xml>
+  <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>90</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+  </w:WordDocument>
+</xml>
+<style>
+  @page WordSection1 {
+    size: 842pt 595pt;
+    margin: 34pt 40pt 34pt 40pt;
+    mso-page-orientation: landscape;
+  }
+  div.WordSection1 { page: WordSection1; }
+
+  body { font-family: Calibri, Segoe UI, Arial, sans-serif; color: #1f2937; font-size: 11pt; }
+  h1 { margin: 0 0 4pt 0; color: #1d4ed8; font-size: 21pt; }
+  h2 { margin: 0 0 6pt 0; color: #1e3a8a; font-size: 13pt; }
+  p { margin: 2pt 0 4pt 0; }
+  ul { margin: 2pt 0 4pt 16pt; }
+  li { margin: 0 0 2pt 0; }
+
+  table.layout { width: 100%; border-collapse: collapse; }
+  table.layout td { vertical-align: top; border: none; }
+
+  table.quadro {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1.5pt solid #cbd5e1;
+    background: #ffffff;
+    border-radius: 8pt;
+    margin: 0 0 8pt 0;
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+  }
+  table.quadro td { padding: 8pt; }
+  .q-azul { background: #eff6ff; border-color: #93c5fd; }
+  .q-verde { background: #f0fdf4; border-color: #86efac; }
+  .q-amarelo { background: #fefce8; border-color: #fde047; }
+  .q-laranja { background: #fff7ed; border-color: #fdba74; }
+  .q-violeta { background: #f5f3ff; border-color: #c4b5fd; }
+  .q-ciano { background: #ecfeff; border-color: #67e8f9; }
+
+  table.data { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  table.data th { background: #1e40af; color: #fff; border: 1pt solid #1e40af; padding: 4pt 5pt; }
+  table.data td { border: 1pt solid #cbd5e1; padding: 4pt 5pt; }
+
+  .pill {
+    display: inline-block;
+    border: 1pt solid #93c5fd;
+    background: #dbeafe;
+    border-radius: 8pt;
+    padding: 2pt 8pt;
+    margin: 0 4pt 4pt 0;
+    font-size: 10pt;
+  }
+
+  .ok { color: #16a34a; font-weight: bold; }
+  .warn { color: #b45309; font-weight: bold; }
+  .bad { color: #dc2626; font-weight: bold; }
+  .page-break { page-break-before: always; }
+  .chk { font-family: Consolas, Courier New, monospace; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+
+<!-- PAGINA 1 -->
+<h1>Plano Gamificado Heitor Santos (v3)</h1>
+<p style="color:#475569;">Versão atualizada com quadro ampliado de atividades, novos valores e meta estendida para R$4.500.</p>
+
+<table class="quadro q-azul"><tr><td>
+  <h2>HUD do Jogo - Novo Alvo</h2>
+  <span class="pill">Meta principal: R$ 3.000 (Nintendo Switch)</span>
+  <span class="pill" style="background:#f0fdf4;border-color:#86efac;">Ja acumulado: <b>R$ 50</b></span>
+  <span class="pill" style="background:#fefce8;border-color:#fde047;">Meta alcancavel estendida: <b>R$ 4.500</b></span>
+  <span class="pill" style="background:#fff7ed;border-color:#fdba74;">Prazo: 31/12/2026</span>
+  <p style="font-size:10pt;color:#334155;">Com mais atividades da casa e consistencia nos estudos, o plano fica mais robusto e com folga.</p>
+  <p style="font-size:10pt;color:#334155;"><b>Progresso:</b> R$50 / R$4.500</p>
+</td></tr></table>
+
+<table class="layout"><tr>
+  <td style="width:50%; padding-right:6pt;">
+    <table class="quadro q-verde"><tr><td>
+      <h2>Sistema de Levels (Atualizado)</h2>
+      <table class="data">
+        <tr><th>Nivel</th><th>Faixa</th><th>Premio</th></tr>
+        <tr><td>Lv 1</td><td>R$0 a R$500</td><td>Lanche especial</td></tr>
+        <tr><td>Lv 2</td><td>R$501 a R$1.200</td><td>Filme + pipoca</td></tr>
+        <tr><td>Lv 3</td><td>R$1.201 a R$2.200</td><td>Brinde surpresa</td></tr>
+        <tr><td>Lv 4</td><td>R$2.201 a R$3.000</td><td>Nintendo Switch desbloqueado</td></tr>
+        <tr><td>Lv 5</td><td>R$3.001 a R$3.800</td><td>Passeio especial + extra</td></tr>
+        <tr><td><b>Lv MAX</b></td><td><b>R$3.801 a R$4.500</b></td><td><b>Reserva forte e conquista maxima</b></td></tr>
+      </table>
+    </td></tr></table>
+  </td>
+  <td style="width:50%; padding-left:6pt;">
+    <table class="quadro q-laranja"><tr><td>
+      <h2>Bases de Ganho (ano)</h2>
+      <table class="data">
+        <tr><th>Fonte</th><th>Estimativa</th></tr>
+        <tr><td>Habitos saude/rotina</td><td class="ok">~R$1.700</td></tr>
+        <tr><td>Estudo diario + notas</td><td class="ok">~R$1.250</td></tr>
+        <tr><td>Tarefas da casa (novo quadro)</td><td class="ok">~R$1.050</td></tr>
+        <tr><td>Combos + chefes + ranking</td><td class="ok">~R$650</td></tr>
+        <tr><td>Penalizacoes previstas</td><td class="bad">-R$200 a -R$300</td></tr>
+        <tr><td><b>Total projetado</b></td><td class="warn"><b>~R$4.350 a R$4.650</b></td></tr>
+      </table>
+      <p style="font-size:10pt;">Planejamento oficial travado em <b>R$4.500</b> para manter alvo realista.</p>
+    </td></tr></table>
+  </td>
+</tr></table>
+
+<!-- PAGINA 2 -->
+<div class="page-break"></div>
+<h1 style="font-size:18pt;">Quadro de Outras Atividades (Casa e Autonomia)</h1>
+
+<table class="quadro q-violeta"><tr><td>
+  <h2>Tarefas Fixas da Semana (obrigatorias)</h2>
+  <table class="data">
+    <tr><th>Dia</th><th>Tarefa obrigatoria</th><th>Valor</th></tr>
+    <tr><td>Segunda</td><td>Tirar lixo dos banheiros + tirar coco da gata</td><td class="ok">+R$3</td></tr>
+    <tr><td>Terca</td><td>Lavar louca do almoco</td><td class="ok">+R$2</td></tr>
+    <tr><td>Quarta</td><td>Tirar lixo dos banheiros + tirar coco da gata</td><td class="ok">+R$3</td></tr>
+    <tr><td>Quinta</td><td>Lavar louca do almoco</td><td class="ok">+R$2</td></tr>
+    <tr><td>Sexta</td><td>Tirar lixo dos banheiros + tirar coco da gata</td><td class="ok">+R$3</td></tr>
+  </table>
+  <p style="font-size:10pt;color:#334155;">Subtotal semanal fixo: <b>R$13</b></p>
+</td></tr></table>
+
+<table class="layout"><tr>
+  <td style="width:50%; padding-right:6pt;">
+    <table class="quadro q-ciano"><tr><td>
+      <h2>Mais tarefas para idade 12-13 (rotina pessoal)</h2>
+      <table class="data">
+        <tr><th>Tarefa</th><th>Frequencia</th><th>Valor</th></tr>
+        <tr><td>Arrumar a cama</td><td>Diario</td><td>+R$1</td></tr>
+        <tr><td>Organizar mochila para o dia seguinte</td><td>Diario</td><td>+R$1</td></tr>
+        <tr><td>Separar roupa suja e guardar roupa limpa</td><td>Diario</td><td>+R$1</td></tr>
+        <tr><td>Mesa de estudo limpa apos uso</td><td>Diario</td><td>+R$1</td></tr>
+        <tr><td>Repor agua/comida da gata (com supervisao)</td><td>Diario</td><td>+R$1</td></tr>
+      </table>
+      <p style="font-size:10pt;color:#334155;">Limite recomendado: pontuar no maximo 3 dessas por dia para nao inflar.</p>
+    </td></tr></table>
+  </td>
+  <td style="width:50%; padding-left:6pt;">
+    <table class="quadro q-amarelo"><tr><td>
+      <h2>Tarefas extras semanais (bonus de responsabilidade)</h2>
+      <table class="data">
+        <tr><th>Tarefa bonus</th><th>Frequencia</th><th>Valor</th></tr>
+        <tr><td>Varrer quarto/sala pequena</td><td>1-2x semana</td><td>+R$2</td></tr>
+        <tr><td>Passar pano no proprio quarto</td><td>1x semana</td><td>+R$2</td></tr>
+        <tr><td>Dobrar roupas proprias</td><td>1x semana</td><td>+R$2</td></tr>
+        <tr><td>Organizar gaveta/prateleira</td><td>1x semana</td><td>+R$2</td></tr>
+        <tr><td>Ajudar a por/tirar mesa do jantar</td><td>2-3x semana</td><td>+R$1</td></tr>
+      </table>
+      <p style="font-size:10pt;color:#334155;">Meta de bonus: 3 a 5 tarefas extras por semana.</p>
+    </td></tr></table>
+  </td>
+</tr></table>
+
+<table class="quadro q-laranja"><tr><td>
+  <h2>Regras do quadro de atividades</h2>
+  <ul>
+    <li>Qualidade importa: tarefa mal feita nao pontua.</li>
+    <li>Seguranca primeiro: luva para limpar caixa/coco da gata e lavar as maos depois.</li>
+    <li>Pode recuperar 1 tarefa perdida por semana.</li>
+    <li>Dia completo (habitos + tarefa obrigatoria) gera bonus de <span class="ok">+R$2</span>.</li>
+    <li>Penalidade por nao cumprir tarefa obrigatoria sem motivo: <span class="bad">-R$1</span>.</li>
+  </ul>
+</td></tr></table>
+
+<!-- PAGINA 3 -->
+<div class="page-break"></div>
+<h1 style="font-size:18pt;">Calendario Financeiro (R$4.500)</h1>
+
+<table class="quadro q-azul"><tr><td>
+  <h2>Metas mensais de Abril a Dezembro (partindo de R$50)</h2>
+  <table class="data">
+    <tr>
+      <th>Mes</th>
+      <th>Meta do mes</th>
+      <th>Acumulado alvo</th>
+      <th>Foco principal</th>
+      <th>Real</th>
+    </tr>
+    <tr><td>Abril</td><td>R$300</td><td><b>R$350</b></td><td>Engatar rotina e quadro da casa</td><td>R$___</td></tr>
+    <tr><td>Maio</td><td>R$420</td><td><b>R$770</b></td><td>Estudo diario + tarefas fixas</td><td>R$___</td></tr>
+    <tr><td>Junho</td><td>R$450</td><td><b>R$1.220</b></td><td>Notas 8+ e constancia</td><td>R$___</td></tr>
+    <tr><td>Julho</td><td>R$430</td><td><b>R$1.650</b></td><td>Ferias com disciplina</td><td>R$___</td></tr>
+    <tr><td>Agosto</td><td>R$500</td><td><b>R$2.150</b></td><td>Habitos + estudo forte</td><td>R$___</td></tr>
+    <tr><td>Setembro</td><td>R$520</td><td><b>R$2.670</b></td><td>Combos e poucas falhas</td><td>R$___</td></tr>
+    <tr><td>Outubro</td><td>R$560</td><td><b>R$3.230</b></td><td>Chefao das notas</td><td>R$___</td></tr>
+    <tr><td>Novembro</td><td>R$620</td><td><b>R$3.850</b></td><td>Nivel alto e reserva</td><td>R$___</td></tr>
+    <tr><td>Dezembro</td><td>R$650</td><td><b>R$4.500</b></td><td>Fechamento maximo do ano</td><td>R$___</td></tr>
+  </table>
+  <p style="font-size:10pt;color:#334155;">Meta do Switch (R$3.000) tende a ser batida ate outubro/novembro; dezembro fecha com margem forte.</p>
+</td></tr></table>
+
+<table class="layout"><tr>
+  <td style="width:50%; padding-right:6pt;">
+    <table class="quadro q-verde"><tr><td>
+      <h2>Distribuicao financeira sugerida (mes)</h2>
+      <table class="data">
+        <tr><th>Categoria</th><th>Meta media mensal</th></tr>
+        <tr><td>Habitos (saude/sono/tela/esporte)</td><td>R$180 a R$220</td></tr>
+        <tr><td>Estudo + notas</td><td>R$130 a R$170</td></tr>
+        <tr><td>Tarefas da casa e autonomia</td><td>R$100 a R$130</td></tr>
+        <tr><td>Combos e bonus</td><td>R$40 a R$80</td></tr>
+      </table>
+    </td></tr></table>
+  </td>
+  <td style="width:50%; padding-left:6pt;">
+    <table class="quadro q-amarelo"><tr><td>
+      <h2>Margem para penalizacoes</h2>
+      <p>Se perder <b>R$200</b> no ano: fecha em ~R$4.300</p>
+      <p>Se perder <b>R$350</b> no ano: fecha em ~R$4.150</p>
+      <p>Se perder <b>R$500</b> no ano: fecha em ~R$4.000</p>
+      <p style="font-size:10pt;">Mesmo com oscilacao, continua acima da meta do Switch.</p>
+    </td></tr></table>
+  </td>
+</tr></table>
+
+<!-- PAGINA 4 -->
+<div class="page-break"></div>
+<h1 style="font-size:18pt;">Checklist Semanal Integrado (habitos + casa)</h1>
+
+<table class="quadro q-violeta"><tr><td>
+  <h2>Semana de ____ / ____ / 2026</h2>
+  <table class="data">
+    <tr>
+      <th>Item</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sab</th><th>Dom</th><th>R$</th>
+    </tr>
+    <tr><td>Alimentacao saudavel (+2)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Dormir cedo (+2)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Natacao/Futebol (+2 cada dia de treino)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Pouca tela (+1)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Estudo diario (+2)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Tarefa obrigatoria da casa (+2/+3)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>-</td><td>-</td><td>___</td></tr>
+    <tr><td>Tarefa extra de autonomia (+1)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+    <tr><td>Bonus dia completo (+2)</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td class="chk">☐</td><td>___</td></tr>
+  </table>
+</td></tr></table>
+
+<table class="layout"><tr>
+  <td style="width:33%; padding-right:6pt;">
+    <table class="quadro q-azul"><tr><td>
+      <h2>Fechamento semanal</h2>
+      <p>Habitos: R$___</p>
+      <p>Casa/autonomia: R$___</p>
+      <p>Bonus: R$___</p>
+      <p>Penalidades: R$___</p>
+      <p><b>Total: R$___</b></p>
+    </td></tr></table>
+  </td>
+  <td style="width:33%; padding:0 6pt;">
+    <table class="quadro q-ciano"><tr><td>
+      <h2>Status mensal</h2>
+      <p>Meta mes: R$___</p>
+      <p>Real mes: R$___</p>
+      <p>Acumulado: R$___</p>
+      <p>Rumo a R$4.500: ___%</p>
+    </td></tr></table>
+  </td>
+  <td style="width:33%; padding-left:6pt;">
+    <table class="quadro q-laranja"><tr><td>
+      <h2>Conquistas</h2>
+      <p>Switch: R$3.000</p>
+      <p>Meta estendida: R$4.500</p>
+      <p>Foco do jogo: constancia e responsabilidade.</p>
+    </td></tr></table>
+  </td>
+</tr></table>
+
+</div>
+</body>
+</html>

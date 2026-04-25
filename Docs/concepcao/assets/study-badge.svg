@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="180" viewBox="0 0 380 180" role="img" aria-label="Badge de estudo">
+  <rect x="10" y="10" width="360" height="160" rx="24" fill="#2563eb"/>
+  <rect x="22" y="24" width="336" height="132" rx="18" fill="#1d4ed8"/>
+  <path d="M80 64h130v16H80zm0 28h170v16H80z" fill="#bfdbfe"/>
+  <circle cx="294" cy="90" r="34" fill="#fbbf24"/>
+  <text x="294" y="98" text-anchor="middle" font-size="20" font-family="Verdana" font-weight="700" fill="#1f2937">XP</text>
+  <text x="190" y="148" text-anchor="middle" font-size="22" font-family="Verdana" font-weight="700" fill="#e0f2fe">ESTUDO FOCO</text>
+</svg>

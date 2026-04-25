@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang='pt-BR'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Plano Epico de Crescimento - Heitor</title>
+<style>
+:root {
+  --bg:#130f1f;
+  --panel:#2b1f3f;
+  --panel2:#40245a;
+  --gold:#f6c544;
+  --lava:#ff6b2d;
+  --mint:#7ef8ba;
+  --text:#f7f2ff;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  color:var(--text);
+  background: radial-gradient(circle at top, #2e1e4d 0%, #130f1f 55%, #0e0a17 100%);
+}
+.container { max-width:1100px; margin:24px auto; padding:16px; }
+.hero {
+  background: linear-gradient(120deg, var(--panel2), #24193b);
+  border:3px solid var(--gold);
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 0 18px rgba(246,197,68,.35);
+}
+h1 { margin:0 0 8px; color:var(--gold); font-size:34px; }
+.grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px; }
+.card {
+  background: linear-gradient(160deg, #2a2040, #1f1730);
+  border:2px solid #6e4ea4;
+  border-radius:14px;
+  padding:14px;
+}
+.card h2 { margin:0 0 8px; color:#ffdd77; font-size:20px; }
+.bar {
+  height:26px;
+  border:2px solid #8c6bc2;
+  border-radius:999px;
+  background:#1b1328;
+  overflow:hidden;
+}
+.fill {
+  width:0%;
+  height:100%;
+  background: linear-gradient(90deg,#ff8a3d,#ffd15a);
+}
+table { width:100%; border-collapse:collapse; margin-top:8px; }
+th,td { border:1px solid #7b61a9; padding:8px; text-align:left; }
+th { background:#3a2857; color:#ffe29a; }
+.badge { background:#4b2f71; border:1px solid #9f7bda; padding:4px 8px; border-radius:999px; display:inline-block; margin-right:6px; }
+.small { opacity:.9; font-size:13px; }
+</style>
+</head>
+<body>
+  <div class='container'>
+    <section class='hero'>
+      <h1>PLANO EPICO DE CRESCIMENTO E ESTUDOS - HEITOR</h1>
+      <p class='small'>Objetivo final: acumular R$3000 para desbloquear o Nintendo Switch.</p>
+      <div class='bar'><div class='fill'></div></div>
+      <p><strong>Progresso inicial:</strong> R$0 / R$3000</p>
+      <span class='badge'>Level 1: R$0 - R$300</span>
+      <span class='badge'>Level 2: R$300 - R$800</span>
+      <span class='badge'>Level 3: R$800 - R$1500</span>
+      <span class='badge'>Level 4: R$1500 - R$2000</span>
+      <span class='badge'>Level 5: R$2000 - R$3000</span>
+    </section>
+
+    <section class='grid'>
+      <article class='card'>
+        <h2>Habitos Diarios</h2>
+        <table>
+          <tr><th>Acao</th><th>Recompensa</th></tr>
+          <tr><td>Dormir cedo</td><td>+R$2</td></tr>
+          <tr><td>Cafe da manha</td><td>+R$1</td></tr>
+          <tr><td>Pre-treino</td><td>+R$1</td></tr>
+          <tr><td>Pos-treino</td><td>+R$2</td></tr>
+          <tr><td>Pouca tela a noite</td><td>+R$1</td></tr>
+          <tr><td>Estudo do dia</td><td>+R$2</td></tr>
+        </table>
+      </article>
+
+      <article class='card'>
+        <h2>Notas e Bosses</h2>
+        <table>
+          <tr><th>Meta</th><th>Recompensa</th></tr>
+          <tr><td>Nota >= 8</td><td>+R$20</td></tr>
+          <tr><td>Nota 9</td><td>+R$30</td></tr>
+          <tr><td>Nota 10</td><td>+R$40</td></tr>
+          <tr><td>Chefao das Notas (5 notas 10)</td><td>+R$150</td></tr>
+          <tr><td>Chefao da Semana (7 dias perfeitos)</td><td>+R$100</td></tr>
+        </table>
+      </article>
+
+      <article class='card'>
+        <h2>Combos</h2>
+        <p>3 dias perfeitos: +R$5</p>
+        <p>7 dias perfeitos: +R$15</p>
+        <p>14 dias perfeitos: +R$40</p>
+        <p class='small'>Se quebrar sequencia, combo zera.</p>
+      </article>
+
+      <article class='card'>
+        <h2>Penalidades e Ranking</h2>
+        <p>Nao fez nada no dia: -R$2</p>
+        <p>Ranking semanal:</p>
+        <p>TOP 1 +R$50 | TOP 2 +R$30 | TOP 3 +R$10</p>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 15">
+<meta name="Originator" content="Microsoft Word 15">
+<xml>
+  <w:WordDocument>
+    <w:View>Print</w:View>
+    <w:Zoom>90</w:Zoom>
+    <w:DoNotOptimizeForBrowser/>
+  </w:WordDocument>
+</xml>
+<style>
+  /* Configuração de página: A4 landscape */
+  @page WordSection1 {
+    size: 842pt 595pt;
+    margin: 42pt 48pt 42pt 48pt;
+    mso-page-orientation: landscape;
+  }
+  div.WordSection1 { page: WordSection1; }
+
+  /* Estilos gerais */
+  body {
+    font-family: "Calibri", "Segoe UI", sans-serif;
+    font-size: 11pt;
+    color: #1e293b;
+  }
+
+  h1 {
+    font-size: 22pt;
+    font-weight: bold;
+    color: #1d4ed8;
+    margin: 0 0 4pt 0;
+    mso-style-name: "Titulo Principal";
+  }
+  h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #1d4ed8;
+    border-bottom: 2pt solid #1d4ed8;
+    padding-bottom: 2pt;
+    margin: 8pt 0 4pt 0;
+    mso-style-name: "Secao";
+  }
+  h2.green  { color: #16a34a; border-color: #16a34a; }
+  h2.orange { color: #c2410c; border-color: #c2410c; }
+  h2.purple { color: #7c3aed; border-color: #7c3aed; }
+  h2.cyan   { color: #0891b2; border-color: #0891b2; }
+  h2.gold   { color: #b45309; border-color: #b45309; }
+  h2.red    { color: #dc2626; border-color: #dc2626; }
+
+  /* Tabelas de conteúdo */
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin-bottom: 6pt;
+  }
+  table.data th {
+    background: #1e40af;
+    color: #ffffff;
+    padding: 4pt 6pt;
+    font-size: 10pt;
+    font-weight: bold;
+    border: 1pt solid #1e40af;
+  }
+  table.data td {
+    border: 1pt solid #cbd5e1;
+    padding: 4pt 6pt;
+    vertical-align: top;
+  }
+  table.data tr:nth-child(even) td { background: #f8fafc; }
+
+  /* Tabela de layout em 2/3 colunas */
+  table.layout {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.layout > tbody > tr > td {
+    vertical-align: top;
+    padding: 0 6pt 0 0;
+    border: none;
+  }
+
+  /* Cards coloridos */
+  .card-blue   { background: #eff6ff; border: 1.5pt solid #93c5fd; padding: 6pt 8pt; border-radius: 6pt; }
+  .card-green  { background: #f0fdf4; border: 1.5pt solid #86efac; padding: 6pt 8pt; border-radius: 6pt; }
+  .card-yellow { background: #fefce8; border: 2pt solid #fde047;   padding: 6pt 8pt; border-radius: 6pt; }
+  .card-orange { background: #fff7ed; border: 2pt solid #fdba74;   padding: 6pt 8pt; border-radius: 6pt; }
+  .card-red    { background: #fef2f2; border: 1.5pt solid #fca5a5; padding: 6pt 8pt; border-radius: 6pt; }
+  .card-study  { background: #eff6ff; border: 2pt solid #2563eb;   padding: 6pt 8pt; border-radius: 6pt; }
+
+  /* Pills de status */
+  .pill {
+    display: inline-block;
+    background: #dbeafe;
+    border: 1pt solid #93c5fd;
+    padding: 2pt 8pt;
+    border-radius: 4pt;
+    font-size: 10pt;
+    margin-right: 4pt;
+    margin-bottom: 3pt;
+  }
+
+  /* Level items */
+  .level-row td { padding: 3pt 5pt; font-size: 10pt; }
+
+  /* Tip box */
+  .tip {
+    background: #dbeafe;
+    border-left: 4pt solid #2563eb;
+    padding: 5pt 8pt;
+    font-size: 10pt;
+    color: #1e3a8a;
+    margin: 5pt 0;
+  }
+  .tip-yellow {
+    background: #fef9c3;
+    border-left: 4pt solid #f59e0b;
+    padding: 5pt 8pt;
+    font-size: 10pt;
+    color: #92400e;
+    margin: 5pt 0;
+  }
+  .tip-green {
+    background: #f0fdf4;
+    border-left: 4pt solid #16a34a;
+    padding: 5pt 8pt;
+    font-size: 10pt;
+    color: #14532d;
+    margin: 5pt 0;
+  }
+
+  /* Texto colorido */
+  .ok  { color: #16a34a; font-weight: bold; }
+  .bad { color: #dc2626; font-weight: bold; }
+  .gold-text { color: #b45309; font-weight: bold; }
+  .blue-text { color: #1d4ed8; font-weight: bold; }
+
+  /* Separador de página */
+  .page-break { page-break-before: always; }
+
+  /* Check box simulada */
+  .chk { font-family: "Courier New", monospace; font-size: 11pt; }
+
+  p { margin: 2pt 0 4pt 0; }
+  ul, ol { margin: 2pt 0 4pt 16pt; padding: 0; }
+  li { margin-bottom: 2pt; font-size: 10pt; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+
+<!-- ═══════════════════════════════════════════════════
+     PÁGINA 1 — DASHBOARD + SISTEMA DO GAME
+═══════════════════════════════════════════════════ -->
+
+<table class="layout"><tbody><tr>
+  <!-- Coluna principal: título + levels + combos -->
+  <td style="width:64%;">
+
+    <h1>🎮 PLANO ÉPICO DE CRESCIMENTO — HEITOR SANTOS</h1>
+    <p style="font-size:11pt; color:#475569;">Disciplina vira jogo. Esforço vira recompensa. Consistência vira conquista. 🏆</p>
+
+    <br>
+
+    <table class="layout" style="margin-bottom:6pt;"><tbody><tr>
+      <td><div class="pill">🎯 <b>Meta:</b> R$&nbsp;3.000</div></td>
+      <td><div class="pill" style="background:#f0fdf4; border-color:#86efac;">💰 <b>Acumulado:</b> R$&nbsp;0</div></td>
+      <td><div class="pill" style="background:#fef9c3; border-color:#fde047;">⭐ <b>Level:</b> 1</div></td>
+      <td><div class="pill" style="background:#fdf4ff; border-color:#d8b4fe;">🔥 <b>Combo:</b> 0 dias</div></td>
+      <td><div class="pill" style="background:#fff7ed; border-color:#fdba74;">📅 <b>Prazo:</b> 31/12/2026</div></td>
+    </tr></tbody></table>
+
+    <p style="font-size:9pt; color:#64748b; margin-bottom:2pt;"><b>Progresso até o Nintendo Switch:</b></p>
+    <table style="width:100%; border-collapse:collapse; margin-bottom:8pt;">
+      <tr>
+        <td style="border:1.5pt solid #93c5fd; background:#dbeafe; height:14pt; border-radius:8pt; width:100%;"></td>
+      </tr>
+    </table>
+    <p style="font-size:9pt; color:#94a3b8; text-align:right;">R$0 / R$3.000</p>
+
+    <br>
+
+    <table class="layout"><tbody><tr>
+
+      <!-- Levels -->
+      <td style="width:50%; padding-right:8pt;">
+        <h2>🎖 Sistema de Levels</h2>
+        <table class="data">
+          <tr><th>Nível</th><th>Faixa</th><th>Recompensa</th></tr>
+          <tr><td style="color:#64748b;font-weight:bold;">Lv 1</td><td>R$0 – R$300</td><td>🍔 Lanche especial</td></tr>
+          <tr><td style="color:#16a34a;font-weight:bold;">Lv 2</td><td>R$300 – R$800</td><td>🎬 Filme + pipoca</td></tr>
+          <tr><td style="color:#2563eb;font-weight:bold;">Lv 3</td><td>R$800 – R$1.500</td><td>🎁 Brinquedo surpresa</td></tr>
+          <tr><td style="color:#7c3aed;font-weight:bold;">Lv 4</td><td>R$1.500 – R$2.000</td><td>🎯 Passeio especial</td></tr>
+          <tr style="background:#fef9c3;"><td style="color:#b45309;font-weight:bold;">Lv 5</td><td><b>R$2.000 – R$3.000</b></td><td><b>🎮 Nintendo Switch!</b></td></tr>
+        </table>
+      </td>
+
+      <!-- Combos -->
+      <td style="width:50%;">
+        <h2 class="orange">⚡ Combos de Sequência</h2>
+        <table class="data">
+          <tr><th>Sequência</th><th>Bônus</th></tr>
+          <tr><td>🔥 3 dias perfeitos seguidos</td><td class="ok">+R$5</td></tr>
+          <tr><td>🔥🔥 7 dias perfeitos seguidos</td><td class="ok">+R$15</td></tr>
+          <tr><td>🔥🔥🔥 14 dias perfeitos seguidos</td><td class="ok">+R$40</td></tr>
+        </table>
+        <div class="tip-yellow" style="margin-top:4pt;">
+          <b>Dia perfeito</b> = todos os hábitos do dia marcados.<br>
+          Quebrou um dia? Combo zera do zero. 💥
+        </div>
+
+        <h2 class="gold" style="margin-top:8pt;">🏆 Chefões Épicos</h2>
+        <table class="data">
+          <tr><th>Chefão</th><th>Meta</th><th>Bônus</th></tr>
+          <tr><td>🐉 Chefão das Notas</td><td>5 notas 10 no ano</td><td class="ok"><b>+R$150</b></td></tr>
+          <tr><td>⚔️ Chefão da Semana</td><td>7 dias perfeitos seguidos</td><td class="ok"><b>+R$100</b></td></tr>
+        </table>
+
+        <h2 class="purple" style="margin-top:8pt;">🥇 Ranking XP Semanal</h2>
+        <table class="data">
+          <tr><th>Posição</th><th>Bônus</th><th>Como ganhar</th></tr>
+          <tr><td>🥇 TOP 1</td><td class="ok">+R$50</td><td>Mais consistente da semana</td></tr>
+          <tr><td>🥈 TOP 2</td><td class="ok">+R$30</td><td>Hábitos + estudo sólidos</td></tr>
+          <tr><td>🥉 TOP 3</td><td class="ok">+R$10</td><td>Boa rotina semanal</td></tr>
+        </table>
+      </td>
+
+    </tr></tbody></table>
+
+  </td>
+
+  <!-- Coluna lateral: Nintendo Switch visual + resumo -->
+  <td style="width:36%; padding-left:8pt; vertical-align:top;">
+
+    <!-- Switch SVG inline -->
+    <div style="text-align:center; margin-bottom:6pt;">
+      <svg viewBox="0 0 340 200" width="280" height="165" xmlns="http://www.w3.org/2000/svg">
+        <rect x="70" y="24" rx="14" ry="14" width="200" height="152" fill="#1e293b"/>
+        <rect x="82" y="36" rx="8" ry="8" width="176" height="128" fill="#0f172a"/>
+        <rect x="90" y="44" rx="5" ry="5" width="160" height="112" fill="#1e3a5f"/>
+        <rect x="96" y="50" rx="4" ry="4" width="148" height="100" fill="#0c1a2e"/>
+        <text x="170" y="97" text-anchor="middle" font-size="14" font-family="Calibri,sans-serif" fill="#f8fafc" font-weight="800">NINTENDO</text>
+        <text x="170" y="118" text-anchor="middle" font-size="22" font-family="Calibri,sans-serif" fill="#38bdf8" font-weight="900">SWITCH</text>
+        <rect x="10" y="34" rx="18" ry="18" width="64" height="132" fill="#2563eb"/>
+        <circle cx="42" cy="78" r="13" fill="#1d4ed8"/>
+        <circle cx="30" cy="116" r="7" fill="#bfdbfe"/>
+        <circle cx="52" cy="116" r="7" fill="#bfdbfe"/>
+        <circle cx="42" cy="100" r="7" fill="#bfdbfe"/>
+        <circle cx="42" cy="132" r="7" fill="#bfdbfe"/>
+        <rect x="266" y="34" rx="18" ry="18" width="64" height="132" fill="#e11d48"/>
+        <circle cx="298" cy="118" r="13" fill="#be123c"/>
+        <circle cx="282" cy="80" r="7" fill="#fca5a5"/>
+        <circle cx="298" cy="68" r="7" fill="#86efac"/>
+        <circle cx="314" cy="80" r="7" fill="#93c5fd"/>
+        <circle cx="298" cy="92" r="7" fill="#fde047"/>
+      </svg>
+      <p style="font-size:13pt; font-weight:bold; color:#e11d48; text-align:center; margin-top:2pt;">🏆 OBJETIVO FINAL — FIM DE ANO!</p>
+    </div>
+
+    <div class="card-yellow">
+      <p style="font-size:10pt; font-weight:bold; color:#92400e; margin-bottom:4pt;">💡 Projeção para R$3.000</p>
+      <table style="width:100%; font-size:10pt; border-collapse:collapse;">
+        <tr><td>Hábitos base (9 meses)</td><td class="ok" style="text-align:right;">~R$1.512</td></tr>
+        <tr><td>Esportes (natação + futebol)</td><td class="ok" style="text-align:right;">~R$294</td></tr>
+        <tr><td>Notas escolares (~20 aval.)</td><td class="ok" style="text-align:right;">~R$600</td></tr>
+        <tr><td>Combos + chefões + ranking</td><td class="ok" style="text-align:right;">~R$500</td></tr>
+        <tr style="border-top:1.5pt solid #b45309;">
+          <td><b>Total projetado</b></td>
+          <td class="ok" style="text-align:right; font-size:12pt;"><b>~R$2.906–3.200</b></td>
+        </tr>
+      </table>
+      <p style="font-size:9pt; color:#92400e; margin-top:4pt;">
+        Com consistência, chega. O ponto crítico é não quebrar muitos dias seguidos e manter o estudo.
+      </p>
+    </div>
+
+  </td>
+</tr></tbody></table>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PÁGINA 2 — HÁBITOS + ALIMENTAÇÃO + MISSÃO DE ESTUDO
+═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<h1 style="font-size:18pt;">✅ Hábitos, Alimentação e Missão de Estudo</h1>
+<br>
+
+<table class="layout"><tbody><tr>
+
+  <!-- Hábitos diários -->
+  <td style="width:34%; padding-right:8pt; vertical-align:top;">
+    <h2 class="green">✅ Hábitos Diários — Quanto Rende</h2>
+    <table class="data">
+      <tr><th>Hábito</th><th>R$</th><th>Quando conta</th></tr>
+      <tr><td>🥗 Alimentação saudável</td><td class="ok">+R$2</td><td>3 das 4 refeições com comida de verdade</td></tr>
+      <tr><td>🌙 Dormir cedo</td><td class="ok">+R$2</td><td>Celular apagado antes das 22h</td></tr>
+      <tr><td>🏊 Natação</td><td class="ok">+R$2</td><td>Nos dias de treino — foi e treinou</td></tr>
+      <tr><td>⚽ Futebol</td><td class="ok">+R$2</td><td>Nos dias de treino ou jogo</td></tr>
+      <tr><td>📵 Pouca tela à noite</td><td class="ok">+R$1</td><td>Sem celular/vídeo após o jantar (máx 30 min)</td></tr>
+      <tr><td>📚 Estudo do dia</td><td class="ok">+R$2</td><td>Pelo menos 30 min de estudo focado</td></tr>
+    </table>
+
+    <div class="card-red" style="margin-top:6pt;">
+      <p style="font-size:10pt; font-weight:bold; color:#991b1b;">⚠️ Penalidades</p>
+      <ul style="font-size:10pt;">
+        <li>Não fez nada no dia → <span class="bad">−R$2</span></li>
+        <li>Dormiu muito tarde → perde bônus de sono</li>
+        <li>Excesso de tela → perde bônus de foco</li>
+        <li>Quebrou sequência → combo zera</li>
+      </ul>
+    </div>
+
+    <h2 style="margin-top:10pt;">📝 Notas Escolares</h2>
+    <table class="data">
+      <tr><th>Nota</th><th>Bônus</th><th>Obs.</th></tr>
+      <tr><td>Nota 8 ou mais</td><td class="ok">+R$20</td><td>Bom trabalho!</td></tr>
+      <tr><td>Nota 9</td><td class="ok">+R$30</td><td>Excelente!</td></tr>
+      <tr style="background:#fef9c3;"><td><b>Nota 10 🎉</b></td><td class="ok" style="font-size:13pt;"><b>+R$40</b></td><td><b>JACKPOT!</b></td></tr>
+    </table>
+  </td>
+
+  <!-- Alimentação saudável -->
+  <td style="width:36%; padding-right:8pt; vertical-align:top;">
+    <h2 class="orange">🥗 O Que É Alimentação Saudável?</h2>
+    <table class="data">
+      <tr><th>Refeição</th><th>✅ Conta</th><th>❌ Não Conta</th></tr>
+      <tr>
+        <td>☀️ <b>Café da manhã</b></td>
+        <td>Pão integral + ovo, iogurte + fruta, vitamina de banana, tapioca com queijo</td>
+        <td>Só biscoito recheado, salgadinho, refrigerante cedo</td>
+      </tr>
+      <tr>
+        <td>🌞 <b>Almoço</b></td>
+        <td>Arroz + feijão + frango ou carne + salada ou legume</td>
+        <td>Só macarrão instantâneo, só fritura, sem verdura</td>
+      </tr>
+      <tr>
+        <td>🍎 <b>Lanche</b></td>
+        <td>Fruta, barra de cereal, iogurte, sanduíche natural, castanhas</td>
+        <td>Pacote de chips, muita besteira, energético</td>
+      </tr>
+      <tr>
+        <td>🌙 <b>Jantar</b></td>
+        <td>Sopa, ovo mexido com arroz, prato leve como o almoço</td>
+        <td>Pular o jantar ou só junk food</td>
+      </tr>
+    </table>
+    <div class="tip-green">
+      <b>🟢 Regra simples:</b> 3 das 4 refeições com comida de verdade = <span class="ok">+R$2 garantido!</span><br>
+      <span style="font-size:9.5pt;">Comida de verdade = tem ingredientes de verdade, não veio de pacotinho processado.</span>
+    </div>
+  </td>
+
+  <!-- Manual do Estudo -->
+  <td style="width:30%; vertical-align:top;">
+    <div class="card-study">
+      <p style="font-size:14pt; font-weight:bold; color:#1e40af; margin-bottom:4pt;">📚 MISSÃO: ESTUDO DIÁRIO</p>
+      <p style="font-size:10pt; color:#374151; margin-bottom:6pt; line-height:1.5;">
+        Sentar para estudar é o hábito mais importante do game — e o que mais traz resultado real na vida.
+      </p>
+
+      <p style="font-size:10pt; font-weight:bold; margin-bottom:4pt;">Como funciona o estudo do dia:</p>
+      <p style="font-size:10pt; line-height:1.8;">
+        <span class="chk">☐</span> Escolhe 1 matéria para estudar<br>
+        <span class="chk">☐</span> Coloca o celular longe (modo silencioso)<br>
+        <span class="chk">☐</span> Estuda <b>30 min sem parar</b><br>
+        <span class="chk">☐</span> Descansa 10 min — você merece!<br>
+        <span class="chk">☐</span> Anota no checklist e soma os R$
+      </p>
+
+      <div class="tip" style="margin-top:6pt;">
+        🕓 <b>Horário fixo sugerido: 16h</b><br>
+        30 min todo dia &gt; 3h só na véspera!<br>
+        📱 Celular longe durante o estudo. Depois: curtiu!
+      </div>
+
+      <div class="tip-yellow" style="margin-top:4pt;">
+        🧠 Cada hora de estudo hoje = um passo a mais pro Nintendo Switch! 🎮
+      </div>
+
+      <br>
+      <p style="font-size:10pt; font-weight:bold; margin-bottom:4pt;">💰 Potencial com notas (ano todo):</p>
+      <table style="width:100%; font-size:10pt; border-collapse:collapse;">
+        <tr><td>20 aval. com média nota 9</td><td class="ok" style="text-align:right;">~R$600</td></tr>
+        <tr><td>5 notas 10 (Chefão)</td><td class="ok" style="text-align:right;">+R$150</td></tr>
+        <tr><td>Estudo diário 9 meses</td><td class="ok" style="text-align:right;">~R$480</td></tr>
+        <tr style="border-top:1pt solid #93c5fd;"><td><b>Subtotal estudo</b></td><td class="ok" style="text-align:right;"><b>~R$1.230</b></td></tr>
+      </table>
+    </div>
+  </td>
+
+</tr></tbody></table>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PÁGINA 3 — CALENDÁRIO DE METAS MENSAIS
+═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<h1 style="font-size:18pt;">📅 Calendário de Progresso — Restante de 2026</h1>
+<br>
+
+<table class="layout"><tbody><tr>
+
+  <!-- Tabela mensal principal -->
+  <td style="width:68%; padding-right:8pt; vertical-align:top;">
+    <table class="data">
+      <tr>
+        <th style="width:52pt;">Mês</th>
+        <th style="width:44pt;">Meta R$</th>
+        <th style="width:58pt;">Acumulado</th>
+        <th>🥗 Foco Saúde</th>
+        <th>📚 Foco Estudo</th>
+        <th>🎯 Missão do Mês</th>
+        <th style="width:52pt;">✅ Real</th>
+      </tr>
+      <tr>
+        <td><b>Abril</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$150</td>
+        <td style="color:#2563eb; font-weight:bold;">R$150</td>
+        <td>Regular sono e reduzir tela</td>
+        <td>Criar rotina de estudo</td>
+        <td>🔥 Começar combo de 7 dias</td>
+        <td>___/R$150</td>
+      </tr>
+      <tr>
+        <td><b>Maio</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$280</td>
+        <td style="color:#2563eb; font-weight:bold;">R$430</td>
+        <td>Alimentação equilibrada</td>
+        <td>Média ≥ 8 nas avaliações</td>
+        <td>⭐ 1 semana 100% perfeita</td>
+        <td>___/R$280</td>
+      </tr>
+      <tr>
+        <td><b>Junho</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$300</td>
+        <td style="color:#2563eb; font-weight:bold;">R$730</td>
+        <td>Constância na natação</td>
+        <td>Revisão antes das provas</td>
+        <td>🔥🔥 2 combos de 7 dias</td>
+        <td>___/R$300</td>
+      </tr>
+      <tr>
+        <td><b>Julho</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$290</td>
+        <td style="color:#2563eb; font-weight:bold;">R$1.020</td>
+        <td>Futebol + sono cedo</td>
+        <td>Estudar mesmo nas férias</td>
+        <td>⚡ Não quebrar o streak</td>
+        <td>___/R$290</td>
+      </tr>
+      <tr>
+        <td><b>Agosto</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$320</td>
+        <td style="color:#2563eb; font-weight:bold;">R$1.340</td>
+        <td>Treino + alimentação forte</td>
+        <td>Meta de notas 9+</td>
+        <td>⚔️ Vencer Chefão da Semana</td>
+        <td>___/R$320</td>
+      </tr>
+      <tr>
+        <td><b>Setembro</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$320</td>
+        <td style="color:#2563eb; font-weight:bold;">R$1.660</td>
+        <td>Menos tela após jantar</td>
+        <td>5 blocos de foco por semana</td>
+        <td>🥉 Ranking TOP 3 semanal</td>
+        <td>___/R$320</td>
+      </tr>
+      <tr>
+        <td><b>Outubro</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$360</td>
+        <td style="color:#2563eb; font-weight:bold;">R$2.020</td>
+        <td>Hábitos sem falhas</td>
+        <td>Buscar notas 10</td>
+        <td>🐉 Vencer Chefão das Notas</td>
+        <td>___/R$360</td>
+      </tr>
+      <tr>
+        <td><b>Novembro</b></td>
+        <td style="color:#2563eb; font-weight:bold;">R$480</td>
+        <td style="color:#2563eb; font-weight:bold;">R$2.500</td>
+        <td>Manter constância total</td>
+        <td>Fechamento forte do ano</td>
+        <td>⬆️ Subir para Level 5</td>
+        <td>___/R$480</td>
+      </tr>
+      <tr style="background:#fefce8;">
+        <td><b>Dezembro 🏆</b></td>
+        <td style="color:#b45309; font-weight:bold; font-size:12pt;">R$500</td>
+        <td style="color:#b45309; font-weight:bold; font-size:13pt;">R$3.000</td>
+        <td>Final de ano saudável</td>
+        <td>Conclusão com excelência</td>
+        <td>🎮 Nintendo Switch DESBLOQUEADO!</td>
+        <td>___/R$500</td>
+      </tr>
+    </table>
+
+    <br>
+    <table class="layout"><tbody><tr>
+      <td style="width:50%; padding-right:6pt;">
+        <div class="tip-green">
+          <b>Como usar a coluna "Real":</b> No fim de cada mês, some tudo que ganhou e anote. Se bateu a meta → celebra e sobe de level!
+        </div>
+      </td>
+      <td style="width:50%;">
+        <div class="card-blue">
+          <b>Projeção:</b> Hábitos + esportes = ~R$1.800 · Notas + combos + chefões = ~R$1.200+ <br><b>Total: R$3.000 ✅ é possível!</b>
+        </div>
+      </td>
+    </tr></tbody></table>
+  </td>
+
+  <!-- Estratégia de acompanhamento -->
+  <td style="width:32%; vertical-align:top;">
+    <div class="card-blue" style="margin-bottom:8pt;">
+      <p style="font-size:12pt; font-weight:bold; color:#1e40af; margin-bottom:4pt;">📋 Estratégia de Acompanhamento</p>
+      <p style="font-size:10.5pt; line-height:1.9;">
+        <b>🌙 Todo dia à noite (5 min)</b><br>
+        Marcar hábitos feitos no checklist.<br>
+        Calcular R$ ganho no dia.<br>
+        <br>
+        <b>☀️ Todo domingo (10 min)</b><br>
+        Somar a semana completa.<br>
+        Ver se o combo está de pé.<br>
+        Comparar com a meta mensal.<br>
+        <br>
+        <b>🎯 Virada de cada mês</b><br>
+        Conferir total acumulado.<br>
+        Celebrar o Level conquistado! 🎉<br>
+        Planejar o próximo mês.
+      </p>
+    </div>
+
+    <div class="card-yellow">
+      <p style="font-size:12pt; font-weight:bold; color:#92400e; margin-bottom:4pt;">💡 Segredo do Game</p>
+      <p style="font-size:10.5pt; line-height:1.8;">
+        Você não precisa ser perfeito <i>todo</i> dia.<br><br>
+        Mas a <b>consistência</b> é o que garante chegar nos R$3.000.<br><br>
+        <b>7 hábitos × 6 dias/semana</b><br>
+        = ~R$42/semana<br>
+        = ~R$1.512 só de hábitos em 9 meses.<br><br>
+        Notas + combos + chefões<br>
+        fazem o resto! 🏆
+      </p>
+    </div>
+  </td>
+
+</tr></tbody></table>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PÁGINA 4 — CHECKLIST SEMANAL + RECOMPENSAS
+═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+
+<h1 style="font-size:18pt;">🗓 Checklist Semanal + Recompensas no Caminho</h1>
+<br>
+
+<table class="layout"><tbody><tr>
+
+  <!-- Checklist semanal -->
+  <td style="width:62%; padding-right:8pt; vertical-align:top;">
+    <h2 class="green">Checklist Semanal — Semana de ____/____/2026</h2>
+
+    <table class="data">
+      <tr>
+        <th style="width:140pt;">Hábito</th>
+        <th style="width:26pt; text-align:center;">Seg</th>
+        <th style="width:26pt; text-align:center;">Ter</th>
+        <th style="width:26pt; text-align:center;">Qua</th>
+        <th style="width:26pt; text-align:center;">Qui</th>
+        <th style="width:26pt; text-align:center;">Sex</th>
+        <th style="width:26pt; text-align:center;">Sáb</th>
+        <th style="width:26pt; text-align:center;">Dom</th>
+        <th style="width:36pt;">R$ Sem.</th>
+      </tr>
+      <tr>
+        <td>🥗 Alimentação saudável (+R$2)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr>
+        <td>🌙 Dormir cedo (+R$2)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr>
+        <td>🏊 Natação (+R$2, dias de treino)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr>
+        <td>⚽ Futebol (+R$2, dias de treino)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr>
+        <td>📵 Pouca tela à noite (+R$1)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr>
+        <td>📚 Estudo do dia (+R$2)</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td>___</td>
+      </tr>
+      <tr style="background:#fefce8;">
+        <td><b>✅ Dia Perfeito?</b></td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td style="text-align:center;" class="chk">☐</td>
+        <td style="text-align:center;" class="chk">☐</td><td></td>
+      </tr>
+    </table>
+
+    <br>
+    <table class="layout"><tbody><tr>
+      <td style="width:33%; padding-right:5pt;">
+        <div class="card-green" style="font-size:10.5pt; line-height:1.8;">
+          <b>Total da semana:</b> R$ _____<br>
+          <b>Combo atual:</b> _____ dias 🔥<br>
+          <b>Bônus de combo:</b> R$ _____
+        </div>
+      </td>
+      <td style="width:33%; padding-right:5pt;">
+        <div class="card-blue" style="font-size:10.5pt; line-height:1.8;">
+          <b>Total no mês:</b> R$ _____<br>
+          <b>Meta do mês:</b> R$ _____<br>
+          <b>Falta:</b> R$ _____
+        </div>
+      </td>
+      <td style="width:33%;">
+        <div class="card-yellow" style="font-size:10.5pt; line-height:1.8;">
+          <b>Notas essa semana:</b><br>
+          Matéria: ____________<br>
+          Nota: ___ → R$ _____
+        </div>
+      </td>
+    </tr></tbody></table>
+
+    <br>
+    <h2 class="cyan">📆 Rastreador de Semanas — _____________ 2026</h2>
+    <table class="data" style="font-size:10.5pt; text-align:center;">
+      <tr>
+        <th style="text-align:left; width:46pt;">Semana</th>
+        <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th>
+        <th>R$ total</th><th>Combo</th><th style="width:60pt;">Notas/R$</th>
+      </tr>
+      <tr><td style="text-align:left;"><b>Sem 1</b></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td>___</td></tr>
+      <tr><td style="text-align:left;"><b>Sem 2</b></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td>___</td></tr>
+      <tr><td style="text-align:left;"><b>Sem 3</b></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td>___</td></tr>
+      <tr><td style="text-align:left;"><b>Sem 4</b></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td>___</td></tr>
+      <tr style="background:#eff6ff;"><td style="text-align:left;"><b>TOTAL MÊS</b></td><td colspan="7"></td><td><b>R$___</b></td><td><b>___d</b></td><td><b>___</b></td></tr>
+    </table>
+  </td>
+
+  <!-- Recompensas + manual compacto -->
+  <td style="width:38%; vertical-align:top;">
+    <h2 class="purple">🎁 Recompensas no Caminho</h2>
+    <table class="data">
+      <tr style="background:#f1f5f9;"><td style="font-size:20pt; text-align:center; width:34pt;">🍔</td><td><b>R$300</b></td><td>Lanche especial comemorativo</td></tr>
+      <tr style="background:#f0fdf4;"><td style="font-size:20pt; text-align:center;">🎬</td><td><b>R$800</b></td><td>Filme com pipoca</td></tr>
+      <tr style="background:#eff6ff;"><td style="font-size:20pt; text-align:center;">🎁</td><td><b>R$1.500</b></td><td>Brinquedo surpresa</td></tr>
+      <tr style="background:#fdf4ff;"><td style="font-size:20pt; text-align:center;">🎯</td><td><b>R$2.000</b></td><td>Passeio especial</td></tr>
+      <tr style="background:#fefce8; border:2pt solid #fde047;"><td style="font-size:22pt; text-align:center;">🎮</td><td><b style="font-size:13pt;">R$3.000</b></td><td><b style="font-size:13pt;">Nintendo Switch DESBLOQUEADO! 🏆</b></td></tr>
+    </table>
+
+    <br>
+    <div class="card-study">
+      <p style="font-size:12pt; font-weight:bold; color:#1e40af; margin-bottom:4pt;">📚 Manual do Guerreiro dos Estudos</p>
+      <p style="font-size:10pt; line-height:1.7;">
+        <span class="chk">☐</span> 30 min focado = <span class="ok">+R$2/dia</span><br>
+        <span class="chk">☐</span> Nota 8 = <span class="ok">+R$20</span> &nbsp;|&nbsp; Nota 9 = <span class="ok">+R$30</span><br>
+        <span class="chk">☐</span> Nota 10 = <span class="ok">+R$40</span> 🎉 JACKPOT!<br>
+        <span class="chk">☐</span> 5 notas 10 no ano → <span class="ok">+R$150</span> extra
+      </p>
+      <div class="tip" style="margin-top:5pt;">
+        💡 <b>Horário fixo (ex: 16h)</b> + celular longe = hábito criado.<br>
+        Melhor estudar 30 min todo dia do que 3h só na véspera!
+      </div>
+      <div class="tip-yellow" style="margin-top:4pt;">
+        🧠 Cada hora de estudo = um passo a mais pro Switch! 🎮
+      </div>
+    </div>
+  </td>
+
+</tr></tbody></table>
+
+</div><!-- WordSection1 -->
+</body>
+</html>

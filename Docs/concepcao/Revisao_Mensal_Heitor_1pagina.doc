@@ -1,0 +1,124 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+xmlns:w='urn:schemas-microsoft-com:office:word'
+xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset='utf-8'>
+<meta name='ProgId' content='Word.Document'>
+<meta name='Generator' content='Microsoft Word 15'>
+<meta name='Originator' content='Microsoft Word 15'>
+<title>Revisao Mensal Heitor</title>
+<style>
+@page Section1 {
+  size: 841.9pt 595.3pt;
+  mso-page-orientation: landscape;
+  margin: 1.2cm 1.2cm 1.2cm 1.2cm;
+}
+div.Section1 { page: Section1; }
+body { font-family: Calibri, sans-serif; color: #0F172A; }
+h1 { font-size: 20pt; margin: 0 0 8pt 0; color: #1D4ED8; }
+h2 { font-size: 12pt; margin: 0 0 6pt 0; color: #1E40AF; }
+p { font-size: 10pt; margin: 3pt 0; }
+.table { width: 100%; border-collapse: collapse; }
+.card { border: 1.5pt solid #CBD5E1; border-radius: 10pt; background: #FFFFFF; }
+.head { background: #1E40AF; color: #FFFFFF; font-weight: bold; }
+.pad { padding: 8pt; }
+.soft { color: #475569; }
+.good { color: #15803D; font-weight: bold; }
+.warn { color: #B45309; font-weight: bold; }
+.bad { color: #B91C1C; font-weight: bold; }
+.center { text-align: center; }
+.box { border: 1pt dashed #94A3B8; height: 56pt; padding: 6pt; }
+</style>
+</head>
+<body>
+<div class='Section1'>
+
+<h1>Revisao Mensal do Jogo - Heitor</h1>
+<p class='soft'>Mes: ____________________ &nbsp;&nbsp; Responsavel: ____________________ &nbsp;&nbsp; Data da revisao: ____ / ____ / 2026</p>
+
+<table class='table'>
+<tr>
+<td width='34%' style='padding-right:8pt; vertical-align:top'>
+  <table class='table card'>
+    <tr><td class='pad'>
+      <h2>Painel do Mes</h2>
+      <p>Meta do mes: R$ __________</p>
+      <p>Valor real do mes: R$ __________</p>
+      <p>Acumulado do ano: R$ __________</p>
+      <p>Level atual: ____________________</p>
+      <p>Status: <span class='good'>Acima</span> / <span class='warn'>No alvo</span> / <span class='bad'>Abaixo</span></p>
+    </td></tr>
+  </table>
+
+  <p>&nbsp;</p>
+
+  <table class='table card'>
+    <tr><td class='pad'>
+      <h2>Fechamento Financeiro</h2>
+      <p>Estudo + notas: R$ __________</p>
+      <p>Habitos: R$ __________</p>
+      <p>Tarefas da casa: R$ __________</p>
+      <p>Combos e bonus: R$ __________</p>
+      <p>Penalizacoes: R$ __________</p>
+      <p><b>Total do mes: R$ __________</b></p>
+    </td></tr>
+  </table>
+</td>
+
+<td width='33%' style='padding:0 4pt; vertical-align:top'>
+  <table class='table card'>
+    <tr><td class='pad'>
+      <h2>O que Funcionou</h2>
+      <div class='box'>
+        1. ___________________________________________<br>
+        2. ___________________________________________<br>
+        3. ___________________________________________
+      </div>
+      <p>&nbsp;</p>
+      <h2>O que Travou</h2>
+      <div class='box'>
+        1. ___________________________________________<br>
+        2. ___________________________________________<br>
+        3. ___________________________________________
+      </div>
+      <p>&nbsp;</p>
+      <h2>Decisao do Proximo Mes</h2>
+      <div class='box'>
+        Foco principal: ________________________________<br>
+        Regra que continua: ____________________________<br>
+        Regra que muda: ________________________________
+      </div>
+    </td></tr>
+  </table>
+</td>
+
+<td width='33%' style='padding-left:8pt; vertical-align:top'>
+  <table class='table card'>
+    <tr><td class='pad'>
+      <h2>Checklist da Reuniao</h2>
+      <p>[ ] Conferimos o total pago do mes</p>
+      <p>[ ] Validamos notas e sessoes de estudo</p>
+      <p>[ ] Revisamos penalizacoes e se fizeram sentido</p>
+      <p>[ ] Confirmamos o level atual</p>
+      <p>[ ] Definimos o foco do proximo mes</p>
+      <p>[ ] Encerramos sem pendencia aberta</p>
+      <p>&nbsp;</p>
+      <h2>Mensagem Final do Mes</h2>
+      <div class='box'>
+        ______________________________________________<br>
+        ______________________________________________<br>
+        ______________________________________________
+      </div>
+      <p>&nbsp;</p>
+      <h2>Assinatura de Fechamento</h2>
+      <p>Heitor: _________________________________</p>
+      <p>Responsavel: ____________________________</p>
+    </td></tr>
+  </table>
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

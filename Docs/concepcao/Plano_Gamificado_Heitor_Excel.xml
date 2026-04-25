@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+    <Style ss:ID="Default" ss:Name="Normal">
+      <Alignment ss:Vertical="Center"/>
+      <Borders/>
+      <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#F5F7FA"/>
+      <Interior ss:Color="#0D1B2A" ss:Pattern="Solid"/>
+    </Style>
+    <Style ss:ID="title">
+      <Font ss:Bold="1" ss:Size="18" ss:Color="#FFC857"/>
+      <Interior ss:Color="#1D3557" ss:Pattern="Solid"/>
+      <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+    </Style>
+    <Style ss:ID="hdr">
+      <Font ss:Bold="1" ss:Color="#FFE8A3"/>
+      <Interior ss:Color="#1F4B40" ss:Pattern="Solid"/>
+      <Borders>
+        <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+      </Borders>
+    </Style>
+    <Style ss:ID="card">
+      <Borders>
+        <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+        <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#406080"/>
+      </Borders>
+      <Interior ss:Color="#22324B" ss:Pattern="Solid"/>
+    </Style>
+    <Style ss:ID="ok"><Font ss:Bold="1" ss:Color="#7AE582"/></Style>
+    <Style ss:ID="bad"><Font ss:Bold="1" ss:Color="#FF4D6D"/></Style>
+  </Styles>
+
+  <Worksheet ss:Name="Dashboard">
+    <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="40" x:FullColumns="1" x:FullRows="1">
+      <Column ss:AutoFitWidth="0" ss:Width="240"/>
+      <Column ss:AutoFitWidth="0" ss:Width="220"/>
+      <Column ss:AutoFitWidth="0" ss:Width="150"/>
+      <Row ss:Height="30">
+        <Cell ss:MergeAcross="2" ss:StyleID="title"><Data ss:Type="String">PLANO EPICO DE CRESCIMENTO E ESTUDOS - HEITOR</Data></Cell>
+      </Row>
+      <Row><Cell><Data ss:Type="String"></Data></Cell></Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Meta Final</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Nintendo Switch</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Total Acumulado</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="Number">0</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Meta Total</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="Number">3000</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Falta para desbloquear</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="Number">3000</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Level Atual</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Level 1</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Recompensa Atual</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Lanche especial</Data></Cell>
+      </Row>
+      <Row><Cell><Data ss:Type="String"></Data></Cell></Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Combos</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">3 dias: +R$5 | 7 dias: +R$15 | 14 dias: +R$40</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Chefao das Notas</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">5 notas 10 = +R$150</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Chefao da Semana</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">7 dias perfeitos = +R$100</Data></Cell>
+      </Row>
+      <Row><Cell><Data ss:Type="String"></Data></Cell></Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Ranking XP</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">TOP1 +R$50 | TOP2 +R$30 | TOP3 +R$10</Data></Cell>
+      </Row>
+      <Row><Cell><Data ss:Type="String"></Data></Cell></Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Habitos Diarios</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Alimentacao(+2), Dormir cedo(+2), Natacao(+2), Futebol(+2), Pouca tela(+1), Estudo(+2)</Data></Cell>
+      </Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Penalidade</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Nao fez nada no dia = -R$2</Data></Cell>
+      </Row>
+      <Row><Cell><Data ss:Type="String"></Data></Cell></Row>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Calendario Restante 2026</Data></Cell>
+        <Cell ss:StyleID="card"><Data ss:Type="String">Planejar e marcar progresso de Abril a Dezembro</Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Checklist Diario">
+    <Table ss:ExpandedColumnCount="10" ss:ExpandedRowCount="35" x:FullColumns="1" x:FullRows="1">
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Column ss:Width="90"/>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Dia</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Dormiu</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Alimentacao</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Natacao</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Futebol</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Pouca tela</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Estudo</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Total Dia</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Combo</Data></Cell>
+      </Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">1</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">2</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">3</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">4</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">5</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">6</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="Number">7</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">[ ]</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String"></Data></Cell></Row>
+    </Table>
+  </Worksheet>
+
+  <Worksheet ss:Name="Calendario 2026">
+    <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="12" x:FullColumns="1" x:FullRows="1">
+      <Column ss:Width="120"/>
+      <Column ss:Width="200"/>
+      <Column ss:Width="200"/>
+      <Column ss:Width="200"/>
+      <Row>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Mes</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Foco Saude</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Foco Estudo</Data></Cell>
+        <Cell ss:StyleID="hdr"><Data ss:Type="String">Missao do Mes</Data></Cell>
+      </Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Abril</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Regular sono e reduzir tela</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Organizar rotina de estudo</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Combo de 7 dias</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Maio</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Alimentacao equilibrada</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Media >= 8</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Semana perfeita</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Junho</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Constancia na natacao</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Revisao de provas</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">2 combos de 7 dias</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Julho</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Futebol e sono cedo</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Estudo de ferias</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Sem quebrar streak</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Agosto</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Treino e alimentacao</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Meta de notas 9+</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Chefe da Semana</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Setembro</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Menos tela a noite</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Blocos de foco semanais</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">TOP 3 ranking</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Outubro</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Habitos sem falhas</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Buscar notas 10</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Chefe das Notas</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Novembro</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Manter constancia</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Fechamento forte</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Subir de level</Data></Cell></Row>
+      <Row><Cell ss:StyleID="card"><Data ss:Type="String">Dezembro</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Final de ano saudavel</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Conclusao com excelencia</Data></Cell><Cell ss:StyleID="card"><Data ss:Type="String">Nintendo Switch desbloqueado</Data></Cell></Row>
+    </Table>
+  </Worksheet>
+</Workbook>

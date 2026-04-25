@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Plano Épico de Crescimento – Heitor</title>
+<style>
+/* ─── RESET ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── PRINT / PAGE SETUP ─────────────────────────── */
+@page { size: A4 landscape; margin: 10mm 12mm; }
+
+/* ─── BASE ───────────────────────────────────────── */
+body {
+  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+  background: #e8eef8;
+  color: #1e293b;
+  font-size: 13px;
+}
+
+/* ─── PAGE ───────────────────────────────────────── */
+.page {
+  width: 277mm;
+  min-height: 190mm;
+  background: #ffffff;
+  padding: 7mm 9mm;
+  margin: 0 auto 8mm;
+  border-radius: 8px;
+  box-shadow: 0 2px 14px rgba(0,0,0,.12);
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ─── COLORS ─────────────────────────────────────── */
+:root {
+  --blue:   #2563eb;
+  --cyan:   #0891b2;
+  --green:  #16a34a;
+  --orange: #ea580c;
+  --purple: #7c3aed;
+  --red:    #dc2626;
+  --gold:   #d97706;
+  --bg1:    #eff6ff;
+  --bg2:    #ecfdf5;
+  --bg3:    #fef9c3;
+  --bg4:    #fdf4ff;
+  --border: #e2e8f0;
+}
+
+/* ─── UTILITIES ──────────────────────────────────── */
+.row   { display: flex; gap: 6mm; }
+.col   { flex: 1; }
+.bold  { font-weight: 700; }
+.ok    { color: var(--green); font-weight: 700; }
+.bad   { color: var(--red);   font-weight: 700; }
+
+/* ─── CARD ───────────────────────────────────────── */
+.card {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 5mm 6mm;
+  background: #fff;
+}
+.card.blue   { background: var(--bg1); border-color: #93c5fd; }
+.card.green  { background: var(--bg2); border-color: #86efac; }
+.card.yellow { background: var(--bg3); border-color: #fde047; }
+.card.purple { background: var(--bg4); border-color: #d8b4fe; }
+
+/* ─── HEADINGS ───────────────────────────────────── */
+.page-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--blue);
+  letter-spacing: -.3px;
+  line-height: 1.1;
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 2px 0 4px;
+  border-bottom: 2px solid currentColor;
+  margin-bottom: 5px;
+}
+.section-title.blue   { color: var(--blue); }
+.section-title.green  { color: var(--green); }
+.section-title.orange { color: var(--orange); }
+.section-title.purple { color: var(--purple); }
+.section-title.cyan   { color: var(--cyan); }
+.section-title.gold   { color: var(--gold); }
+.section-title.red    { color: var(--red); }
+
+/* ─── XP BAR ─────────────────────────────────────── */
+.xpbar-wrap {
+  border: 2px solid #93c5fd;
+  border-radius: 999px;
+  height: 18px;
+  overflow: hidden;
+  background: #dbeafe;
+}
+.xpbar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  border-radius: 999px;
+  width: 0%;
+}
+
+/* ─── TABLE ──────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { background: #1e40af; color: #fff; padding: 4px 6px; text-align: left; font-size: 11px; }
+td { border: 1px solid #e2e8f0; padding: 4px 6px; vertical-align: top; }
+tr:nth-child(even) td { background: #f8fafc; }
+
+/* ─── LEVEL LIST ─────────────────────────────────── */
+.level-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.lv-dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 12px; color: #fff;
+  flex-shrink: 0;
+}
+
+/* ─── BOSS CARD ──────────────────────────────────── */
+.boss-card {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  border: 2px solid #fde047;
+  border-radius: 10px;
+  padding: 5px 8px;
+  background: #fefce8;
+  margin-bottom: 5px;
+}
+.boss-icon { font-size: 26px; flex-shrink: 0; }
+.boss-text { font-size: 11px; line-height: 1.4; }
+.boss-text strong { color: var(--orange); font-size: 12px; }
+
+/* ─── COMBO BLOCK ────────────────────────────────── */
+.combo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+/* ─── CHECKLIST ITEM ─────────────────────────────── */
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 6px;
+  border-radius: 7px;
+  margin-bottom: 3px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+}
+.check-box {
+  width: 16px; height: 16px;
+  border: 2px solid #94a3b8;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ─── STUDY HIGHLIGHT ────────────────────────────── */
+.study-highlight {
+  background: linear-gradient(160deg, #eff6ff 0%, #f0fdf4 100%);
+  border: 2px solid #2563eb;
+  border-radius: 12px;
+  padding: 5mm 6mm;
+  height: 100%;
+}
+
+/* ─── MONTH TABLE ────────────────────────────────── */
+.month-table th { font-size: 10.5px; background: #1e40af; }
+.month-table td { font-size: 11px; }
+.month-acc  { font-weight: 700; color: var(--blue); }
+
+/* ─── WATERMARK ──────────────────────────────────── */
+.wm {
+  position: absolute;
+  bottom: 4mm; right: 7mm;
+  font-size: 9.5px;
+  color: #94a3b8;
+}
+
+/* ─── SCREEN ONLY ────────────────────────────────── */
+@media screen {
+  body { padding: 12px; }
+  .page { margin-bottom: 24px; }
+}
+@media print {
+  body { background: #fff; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     PÁGINA 1 — CAPA / DASHBOARD
+══════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="row" style="align-items:flex-start; gap:8mm; margin-bottom:5mm;">
+
+    <!-- Título + XP bar + stats -->
+    <div style="flex:2.2;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:3mm;">
+        <span style="font-size:40px; line-height:1;">🎮</span>
+        <div>
+          <div class="page-title">PLANO ÉPICO DE CRESCIMENTO</div>
+          <div style="font-size:18px; font-weight:800; color:#0891b2; margin-top:1px;">HEITOR SANTOS — 2026</div>
+        </div>
+      </div>
+      <div style="font-size:12px; color:#475569; margin-bottom:4mm;">
+        Disciplina vira jogo. Esforço vira recompensa. Consistência vira conquista. 🏆
+      </div>
+
+      <div style="display:flex; gap:4mm; flex-wrap:wrap; margin-bottom:4mm;">
+        <div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:10px;padding:4px 10px;font-size:12px;">🎯 <strong>Meta:</strong> R$&nbsp;3.000</div>
+        <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:4px 10px;font-size:12px;">💰 <strong>Acumulado:</strong> R$&nbsp;0</div>
+        <div style="background:#fef9c3;border:1.5px solid #fde047;border-radius:10px;padding:4px 10px;font-size:12px;">⭐ <strong>Level:</strong> 1</div>
+        <div style="background:#fdf4ff;border:1.5px solid #d8b4fe;border-radius:10px;padding:4px 10px;font-size:12px;">🔥 <strong>Combo:</strong> 0 dias</div>
+        <div style="background:#fff7ed;border:1.5px solid #fdba74;border-radius:10px;padding:4px 10px;font-size:12px;">📅 <strong>Prazo:</strong> 31/12/2026</div>
+      </div>
+
+      <div style="font-size:11px; color:#475569; margin-bottom:2px; font-weight:600;">Progresso até o Nintendo Switch</div>
+      <div class="xpbar-wrap"><div class="xpbar-fill"></div></div>
+      <div style="font-size:10px; color:#94a3b8; text-align:right; margin-bottom:4mm;">R$0 / R$3.000</div>
+
+      <!-- Levels inline -->
+      <div class="row" style="gap:3mm;">
+        <div style="flex:1;">
+          <div class="section-title blue" style="font-size:11px;">🎖 Levels</div>
+          <div class="level-item" style="background:#f1f5f9;"><div class="lv-dot" style="background:#64748b;">1</div><span><strong>R$0–300</strong> → Lanche 🍔</span></div>
+          <div class="level-item" style="background:#f0fdf4;"><div class="lv-dot" style="background:#16a34a;">2</div><span><strong>R$300–800</strong> → Filme 🎬</span></div>
+          <div class="level-item" style="background:#eff6ff;"><div class="lv-dot" style="background:#2563eb;">3</div><span><strong>R$800–1500</strong> → Brinquedo 🎁</span></div>
+          <div class="level-item" style="background:#fdf4ff;"><div class="lv-dot" style="background:#7c3aed;">4</div><span><strong>R$1500–2000</strong> → Passeio 🎯</span></div>
+          <div class="level-item" style="background:#fef9c3; border:2px solid #fde047;"><div class="lv-dot" style="background:#d97706;">5</div><span><strong>R$2000–3000</strong> → 🎮 <strong>Switch!</strong></span></div>
+        </div>
+        <div style="flex:1;">
+          <div class="section-title orange" style="font-size:11px;">⚡ Combos</div>
+          <div class="combo">🔥 <strong>3 dias perfeitos</strong> → <span class="ok">+R$5</span></div>
+          <div class="combo" style="background:#fff7ed; border-color:#fdba74;">🔥🔥 <strong>7 dias</strong> → <span class="ok">+R$15</span></div>
+          <div class="combo" style="background:#fef9c3; border-color:#fde047;">🔥🔥🔥 <strong>14 dias</strong> → <span class="ok">+R$40</span></div>
+          <div style="margin-top:4px; font-size:11px; color:#64748b; border-left:3px solid #f59e0b; padding-left:5px;">
+            Dia perfeito = todos os hábitos marcados.<br>
+            Quebrou? Combo zera. 💥
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagem Switch + Chefões + Ranking -->
+    <div style="flex:1.2; display:flex; flex-direction:column; gap:4mm;">
+      <!-- SVG Console -->
+      <div style="text-align:center;">
+        <svg viewBox="0 0 340 200" width="260" height="153" xmlns="http://www.w3.org/2000/svg" aria-label="Nintendo Switch">
+          <rect x="70" y="24" rx="14" ry="14" width="200" height="152" fill="#1e293b"/>
+          <rect x="82" y="36" rx="8" ry="8" width="176" height="128" fill="#0f172a"/>
+          <rect x="90" y="44" rx="5" ry="5" width="160" height="112" fill="#1e3a5f"/>
+          <rect x="96" y="50" rx="4" ry="4" width="148" height="100" fill="#0c1a2e"/>
+          <text x="170" y="97" text-anchor="middle" font-size="14" font-family="Segoe UI,sans-serif" fill="#f8fafc" font-weight="800">NINTENDO</text>
+          <text x="170" y="118" text-anchor="middle" font-size="22" font-family="Segoe UI,sans-serif" fill="#38bdf8" font-weight="900">SWITCH</text>
+          <rect x="10" y="34" rx="18" ry="18" width="64" height="132" fill="#2563eb"/>
+          <circle cx="42" cy="78" r="13" fill="#1d4ed8"/>
+          <circle cx="30" cy="116" r="7" fill="#bfdbfe"/>
+          <circle cx="52" cy="116" r="7" fill="#bfdbfe"/>
+          <circle cx="42" cy="100" r="7" fill="#bfdbfe"/>
+          <circle cx="42" cy="132" r="7" fill="#bfdbfe"/>
+          <rect x="266" y="34" rx="18" ry="18" width="64" height="132" fill="#e11d48"/>
+          <circle cx="298" cy="118" r="13" fill="#be123c"/>
+          <circle cx="282" cy="80" r="7" fill="#fca5a5"/>
+          <circle cx="298" cy="68" r="7" fill="#86efac"/>
+          <circle cx="314" cy="80" r="7" fill="#93c5fd"/>
+          <circle cx="298" cy="92" r="7" fill="#fde047"/>
+        </svg>
+        <div style="font-size:13px; font-weight:800; color:#e11d48; margin-top:2px;">🏆 OBJETIVO FINAL — FIM DE ANO!</div>
+      </div>
+
+      <!-- Chefões -->
+      <div>
+        <div class="section-title gold" style="font-size:11px;">🏆 Chefões Épicos</div>
+        <div class="boss-card">
+          <div class="boss-icon">🐉</div>
+          <div class="boss-text"><strong>Chefão das Notas</strong><br>5 notas 10 no ano<br><span class="ok" style="font-size:13px;">+R$150</span></div>
+        </div>
+        <div class="boss-card">
+          <div class="boss-icon">⚔️</div>
+          <div class="boss-text"><strong>Chefão da Semana</strong><br>7 dias perfeitos<br><span class="ok" style="font-size:13px;">+R$100</span></div>
+        </div>
+      </div>
+
+      <!-- Ranking -->
+      <div>
+        <div class="section-title purple" style="font-size:11px;">🥇 Ranking XP Semanal</div>
+        <table style="font-size:11px;">
+          <tr><th>Pos.</th><th>Bônus</th><th>Como ganhar</th></tr>
+          <tr><td>🥇 TOP 1</td><td class="ok">+R$50</td><td>Mais consistente</td></tr>
+          <tr><td>🥈 TOP 2</td><td class="ok">+R$30</td><td>Hábitos + estudo</td></tr>
+          <tr><td>🥉 TOP 3</td><td class="ok">+R$10</td><td>Boa rotina</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="wm">Plano Épico de Crescimento – Heitor Santos 2026 | Pág. 1</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     PÁGINA 2 — HÁBITOS + ALIMENTAÇÃO + ESTUDO
+══════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="row" style="gap:6mm;">
+
+    <!-- Col 1: Hábitos -->
+    <div style="flex:1.1;">
+      <div class="section-title green">✅ Hábitos Diários — Quanto Rende</div>
+      <table>
+        <thead><tr><th>Hábito</th><th>R$</th><th>Quando conta</th></tr></thead>
+        <tbody>
+          <tr><td>🥗 Alimentação saudável</td><td class="ok bold">+R$2</td><td>3 das 4 refeições do dia com comida de verdade</td></tr>
+          <tr><td>🌙 Dormir cedo</td><td class="ok bold">+R$2</td><td>Deitou e apagou o celular antes das 22h</td></tr>
+          <tr><td>🏊 Natação</td><td class="ok bold">+R$2</td><td>Nos dias de treino — foi e treinou de verdade</td></tr>
+          <tr><td>⚽ Futebol</td><td class="ok bold">+R$2</td><td>Nos dias de treino ou jogo</td></tr>
+          <tr><td>📵 Pouca tela à noite</td><td class="ok bold">+R$1</td><td>Sem celular/vídeo após o jantar (exceto 30 min)</td></tr>
+          <tr><td>📚 Estudo do dia</td><td class="ok bold">+R$2</td><td>Pelo menos 30 min de estudo focado</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:5px; padding:5px 8px; background:#fef2f2; border:1.5px solid #fca5a5; border-radius:8px; font-size:11px; line-height:1.7;">
+        ⚠️ <strong>Penalidades:</strong>&nbsp;
+        Não fez nada <span class="bad">−R$2</span> &nbsp;|&nbsp;
+        Dormiu tarde: perde bônus de sono &nbsp;|&nbsp;
+        Excesso de tela: perde bônus de foco &nbsp;|&nbsp;
+        Combo quebrado: sequência zera.
+      </div>
+
+      <div style="margin-top:6mm;">
+        <div class="section-title blue">📝 Notas Escolares</div>
+        <table>
+          <thead><tr><th>Nota</th><th>Bônus</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td>8 ou mais</td><td class="ok bold">+R$20</td><td>Bom trabalho!</td></tr>
+            <tr><td>9</td><td class="ok bold">+R$30</td><td>Excelente!</td></tr>
+            <tr><td>10 🎉</td><td class="ok bold" style="font-size:14px;">+R$40</td><td>JACKPOT! Dobrou o ganho!</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Col 2: Alimentação saudável com exemplos -->
+    <div style="flex:1.3;">
+      <div class="section-title orange">🥗 O Que É Alimentação Saudável? (exemplos práticos)</div>
+      <table>
+        <thead><tr><th>Refeição</th><th>✅ Conta</th><th>❌ Não Conta</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>☀️ <strong>Café da manhã</strong></td>
+            <td>Pão integral + ovo, iogurte + fruta, vitamina de banana, tapioca com queijo</td>
+            <td>Só biscoito recheado, salgadinho, refrigerante logo cedo</td>
+          </tr>
+          <tr>
+            <td>🌞 <strong>Almoço</strong></td>
+            <td>Arroz + feijão + frango ou carne + salada ou legume</td>
+            <td>Só macarrão instantâneo, só fritura, sem nenhuma verdura</td>
+          </tr>
+          <tr>
+            <td>🍎 <strong>Lanche</strong></td>
+            <td>Fruta, barra de cereal, iogurte, sanduíche natural, castanhas</td>
+            <td>Pacote de chips, muita besteira, energético</td>
+          </tr>
+          <tr>
+            <td>🌙 <strong>Jantar</strong></td>
+            <td>Sopa, ovo mexido com arroz, prato leve como o almoço</td>
+            <td>Pular o jantar ou só junk food</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:5px; padding:5px 8px; background:#f0fdf4; border:1.5px solid #86efac; border-radius:8px; font-size:12px; line-height:1.6;">
+        <strong>🟢 Regra simples:</strong> 3 das 4 refeições com comida de verdade = <span class="ok">+R$2 no bolso</span>!<br>
+        <span style="font-size:11px; color:#475569;">Não precisa ser perfeito, precisa ser consistente. Comida de verdade = tem ingredientes de verdade.</span>
+      </div>
+    </div>
+
+    <!-- Col 3: Manual do Estudo (destaque) -->
+    <div style="flex:1.1;">
+      <div class="study-highlight">
+        <div style="font-size:14px; font-weight:900; color:#1e40af; margin-bottom:5px;">📚 MISSÃO: ESTUDO DIÁRIO</div>
+        <div style="font-size:11.5px; color:#374151; margin-bottom:6px; line-height:1.5;">
+          Sentar para estudar é o hábito mais importante do game — e o que mais traz resultado real na vida.
+        </div>
+
+        <div class="check-item"><div class="check-box"></div><span>Escolhe <strong>1 matéria</strong> para estudar</span></div>
+        <div class="check-item"><div class="check-box"></div><span>Coloca o celular longe (modo silencioso)</span></div>
+        <div class="check-item"><div class="check-box"></div><span>Estuda <strong>30 min sem parar</strong></span></div>
+        <div class="check-item"><div class="check-box"></div><span>Descansa 10 min — você merece!</span></div>
+        <div class="check-item"><div class="check-box"></div><span>Anota no checklist e soma os R$</span></div>
+
+        <div style="margin-top:6px; padding:5px 8px; background:#dbeafe; border-radius:8px; font-size:11px; color:#1e3a8a; line-height:1.6;">
+          🕓 <strong>Horário sugerido:</strong> Todo dia às <strong>16h</strong>.<br>
+          30 min todo dia &gt; 3h só na véspera da prova!<br>
+          📱 Durante o estudo: celular longe. Depois: curtiu!
+        </div>
+
+        <div style="margin-top:5px; padding:5px 8px; background:#fef9c3; border:1.5px solid #fde047; border-radius:8px; font-size:11.5px; line-height:1.6;">
+          🧠 Cada hora de estudo hoje = um passo a mais pro Nintendo Switch! 🎮
+        </div>
+
+        <div style="margin-top:6px;">
+          <div style="font-size:11px; font-weight:700; color:#374151; margin-bottom:3px;">💰 Potencial de ganho com notas (ano todo):</div>
+          <div style="font-size:11px; color:#475569; line-height:1.7;">
+            20 avaliações × média nota 9 = <span class="ok">~R$600</span><br>
+            5 notas 10 (Chefão) = <span class="ok">+R$150 extra</span><br>
+            Estudo diário 9 meses = <span class="ok">~R$480</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="wm">Plano Épico de Crescimento – Heitor Santos 2026 | Pág. 2</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     PÁGINA 3 — METAS MENSAIS + ESTRATÉGIA
+══════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-title cyan" style="font-size:15px; margin-bottom:5mm;">📅 Calendário de Progresso — Restante de 2026</div>
+  <div class="row" style="gap:6mm;">
+
+    <!-- Tabela mensal -->
+    <div style="flex:2.1;">
+      <table class="month-table">
+        <thead>
+          <tr>
+            <th style="width:56px;">Mês</th>
+            <th style="width:52px;">Meta R$</th>
+            <th style="width:68px;">Acumulado</th>
+            <th>🥗 Foco Saúde</th>
+            <th>📚 Foco Estudo</th>
+            <th>🎯 Missão do Mês</th>
+            <th style="width:62px;">✅ Real</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Abril</strong></td>
+            <td class="month-acc">R$150</td>
+            <td class="month-acc">R$150</td>
+            <td>Regular sono e reduzir tela</td>
+            <td>Criar rotina de estudo</td>
+            <td>🔥 Começar combo de 7 dias</td>
+            <td>___/R$150</td>
+          </tr>
+          <tr>
+            <td><strong>Maio</strong></td>
+            <td class="month-acc">R$280</td>
+            <td class="month-acc">R$430</td>
+            <td>Alimentação equilibrada</td>
+            <td>Média ≥ 8 nas avaliações</td>
+            <td>⭐ 1 semana 100% perfeita</td>
+            <td>___/R$280</td>
+          </tr>
+          <tr>
+            <td><strong>Junho</strong></td>
+            <td class="month-acc">R$300</td>
+            <td class="month-acc">R$730</td>
+            <td>Constância na natação</td>
+            <td>Revisão antes das provas</td>
+            <td>🔥🔥 2 combos de 7 dias</td>
+            <td>___/R$300</td>
+          </tr>
+          <tr>
+            <td><strong>Julho</strong></td>
+            <td class="month-acc">R$290</td>
+            <td class="month-acc">R$1.020</td>
+            <td>Futebol + sono cedo</td>
+            <td>Estudar mesmo nas férias</td>
+            <td>⚡ Não quebrar o streak</td>
+            <td>___/R$290</td>
+          </tr>
+          <tr>
+            <td><strong>Agosto</strong></td>
+            <td class="month-acc">R$320</td>
+            <td class="month-acc">R$1.340</td>
+            <td>Treino + alimentação forte</td>
+            <td>Meta de notas 9+</td>
+            <td>⚔️ Vencer Chefão da Semana</td>
+            <td>___/R$320</td>
+          </tr>
+          <tr>
+            <td><strong>Setembro</strong></td>
+            <td class="month-acc">R$320</td>
+            <td class="month-acc">R$1.660</td>
+            <td>Menos tela após jantar</td>
+            <td>5 blocos de foco/semana</td>
+            <td>🥉 Ranking TOP 3 semanal</td>
+            <td>___/R$320</td>
+          </tr>
+          <tr>
+            <td><strong>Outubro</strong></td>
+            <td class="month-acc">R$360</td>
+            <td class="month-acc">R$2.020</td>
+            <td>Hábitos sem falhas</td>
+            <td>Buscar notas 10</td>
+            <td>🐉 Vencer Chefão das Notas</td>
+            <td>___/R$360</td>
+          </tr>
+          <tr>
+            <td><strong>Novembro</strong></td>
+            <td class="month-acc">R$480</td>
+            <td class="month-acc">R$2.500</td>
+            <td>Manter constância total</td>
+            <td>Fechamento forte do ano</td>
+            <td>⬆️ Subir para Level 5</td>
+            <td>___/R$480</td>
+          </tr>
+          <tr style="background:#fef9c3;">
+            <td><strong>Dez 🏆</strong></td>
+            <td class="month-acc" style="color:#d97706;">R$500</td>
+            <td class="month-acc" style="color:#d97706; font-size:13px;"><strong>R$3.000</strong></td>
+            <td>Final de ano saudável</td>
+            <td>Conclusão com excelência</td>
+            <td>🎮 Nintendo Switch DESBLOQUEADO!</td>
+            <td>___/R$500</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Mini legenda -->
+      <div style="margin-top:4mm; display:flex; gap:5mm; font-size:11px; color:#475569; align-items:flex-start;">
+        <div style="flex:1; padding:4px 8px; background:#eff6ff; border-radius:7px; border:1px solid #93c5fd;">
+          <strong>Como usar:</strong> No fim de cada mês, some tudo que ganhou e anote em "Real". Se bateu a meta → você subiu de level!
+        </div>
+        <div style="flex:1; padding:4px 8px; background:#f0fdf4; border-radius:7px; border:1px solid #86efac;">
+          <strong>Projeção:</strong> Hábitos base + esportes = ~R$2.100. Notas + combos + chefões = ~R$900+. Total: R$3.000 ✅
+        </div>
+      </div>
+    </div>
+
+    <!-- Estratégia de acompanhamento -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:4mm;">
+      <div class="card blue">
+        <div class="section-title blue" style="margin-bottom:5px; font-size:12px;">📋 Estratégia de Acompanhamento</div>
+        <div style="font-size:11.5px; line-height:1.8;">
+          <strong>🌙 Todo dia à noite (5 min)</strong><br>
+          Marcar hábitos feitos no checklist.<br>
+          Calcular R$ ganho no dia.<br><br>
+          <strong>☀️ Todo domingo (10 min)</strong><br>
+          Somar a semana completa.<br>
+          Ver se o combo está de pé.<br>
+          Comparar com a meta mensal.<br><br>
+          <strong>🎯 Virada de cada mês</strong><br>
+          Conferir total acumulado.<br>
+          Celebrar o Level conquistado! 🎉<br>
+          Planejar o próximo mês.
+        </div>
+      </div>
+
+      <div class="card yellow">
+        <div class="section-title gold" style="margin-bottom:5px; font-size:12px;">💡 Segredo do Game</div>
+        <div style="font-size:11.5px; line-height:1.8;">
+          Você não precisa ser perfeito <em>todo</em> dia.<br><br>
+          Mas a <strong>consistência</strong> é o que garante chegar nos R$3.000.<br><br>
+          <strong>7 hábitos × 6 dias/semana</strong><br>
+          = ~R$42/semana<br>
+          = ~R$1.512 só de hábitos em 9 meses.<br><br>
+          Notas + combos + chefões<br>
+          fazem o resto! 🏆
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="wm">Plano Épico de Crescimento – Heitor Santos 2026 | Pág. 3</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     PÁGINA 4 — CHECKLIST SEMANAL IMPRIMÍVEL
+══════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="row" style="gap:6mm;">
+
+    <!-- Checklist semanal -->
+    <div style="flex:1.1;">
+      <div class="section-title green" style="margin-bottom:5px;">🗓 Checklist Semanal — Semana de ____/____/2026</div>
+      <table style="font-size:11.5px;">
+        <thead>
+          <tr>
+            <th style="width:155px;">Hábito</th>
+            <th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th><th>Dom</th>
+            <th>R$</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🥗 Alimentação saudável (+R$2)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr><td>🌙 Dormir cedo (+R$2)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr><td>🏊 Natação (+R$2, dias treino)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr><td>⚽ Futebol (+R$2, dias treino)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr><td>📵 Pouca tela à noite (+R$1)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr><td>📚 Estudo do dia (+R$2)</td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>___</td></tr>
+          <tr style="background:#fef9c3;">
+            <td><strong>✅ Dia Perfeito?</strong></td>
+            <td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; gap:4mm; margin-top:4mm; font-size:11.5px;">
+        <div style="flex:1; background:#f0fdf4; border:1.5px solid #86efac; border-radius:8px; padding:5px 8px; line-height:1.8;">
+          <strong>Total da semana:</strong> R$ _____<br>
+          <strong>Combo atual:</strong> _____ dias 🔥<br>
+          <strong>Bônus de combo:</strong> R$ _____
+        </div>
+        <div style="flex:1; background:#eff6ff; border:1.5px solid #93c5fd; border-radius:8px; padding:5px 8px; line-height:1.8;">
+          <strong>Total no mês:</strong> R$ _____<br>
+          <strong>Meta do mês:</strong> R$ _____<br>
+          <strong>Falta:</strong> R$ _____
+        </div>
+        <div style="flex:1; background:#fef9c3; border:1.5px solid #fde047; border-radius:8px; padding:5px 8px; line-height:1.8;">
+          <strong>Notas essa semana:</strong><br>
+          Matéria: _____ Nota: _____<br>
+          Ganho: R$ _____
+        </div>
+      </div>
+
+      <div style="margin-top:5mm;">
+        <div class="section-title cyan" style="font-size:12px; margin-bottom:4px;">📆 Rastreador de Semanas do Mês — _____________ 2026</div>
+        <table style="font-size:11px; text-align:center;">
+          <thead><tr><th>Semana</th><th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th><th>R$ total</th><th>Combo</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Sem 1</strong></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td></td></tr>
+            <tr><td><strong>Sem 2</strong></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td></td></tr>
+            <tr><td><strong>Sem 3</strong></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td></td></tr>
+            <tr><td><strong>Sem 4</strong></td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>___</td><td>R$___</td><td>___d</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Manual visual compacto -->
+    <div style="flex:1.1;">
+      <div class="study-highlight" style="height:auto; margin-bottom:5mm;">
+        <div style="font-size:14px; font-weight:900; color:#1e40af; margin-bottom:5px;">📚 MANUAL DO GUERREIRO DOS ESTUDOS</div>
+        <div style="font-size:11.5px; color:#374151; margin-bottom:5px; line-height:1.5;">
+          Estudar é a missão principal. Sem estudo, o Switch não sai. Com estudo, cada nota vira dinheiro real.
+        </div>
+        <div class="check-item"><div class="check-box"></div><span>30 min de estudo focado no dia = <strong class="ok">+R$2</strong></span></div>
+        <div class="check-item"><div class="check-box"></div><span>Nota 8 = <strong class="ok">+R$20</strong> &nbsp;|&nbsp; Nota 9 = <strong class="ok">+R$30</strong> &nbsp;|&nbsp; Nota 10 = <strong class="ok">+R$40</strong></span></div>
+        <div class="check-item"><div class="check-box"></div><span>5 notas 10 no ano → Chefão derrubado → <strong class="ok">+R$150</strong></span></div>
+        <div style="margin-top:5px; padding:5px 8px; background:#dbeafe; border-radius:8px; font-size:11px; color:#1e3a8a; line-height:1.6;">
+          💡 Horário fixo todo dia (ex: 16h) &gt; estudar quando der.<br>
+          Celular longe durante o estudo. Simples assim.
+        </div>
+      </div>
+
+      <!-- Recompensas visuais -->
+      <div>
+        <div class="section-title purple" style="font-size:12px; margin-bottom:5px;">🎁 Recompensas no Caminho</div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="display:flex; align-items:center; gap:6px; padding:4px 8px; background:#f1f5f9; border-radius:8px; font-size:12px;">
+            <span style="font-size:18px;">🍔</span>
+            <div><strong>R$300</strong> — Lanche especial comemorativo</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:4px 8px; background:#f0fdf4; border-radius:8px; font-size:12px;">
+            <span style="font-size:18px;">🎬</span>
+            <div><strong>R$800</strong> — Filme com pipoca</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:4px 8px; background:#eff6ff; border-radius:8px; font-size:12px;">
+            <span style="font-size:18px;">🎁</span>
+            <div><strong>R$1.500</strong> — Brinquedo surpresa</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:4px 8px; background:#fdf4ff; border-radius:8px; font-size:12px;">
+            <span style="font-size:18px;">🎯</span>
+            <div><strong>R$2.000</strong> — Passeio especial</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; padding:5px 8px; background:#fef9c3; border:2px solid #fde047; border-radius:8px; font-size:13px; font-weight:700;">
+            <span style="font-size:22px;">🎮</span>
+            <div><strong>R$3.000</strong> — Nintendo Switch DESBLOQUEADO! 🏆</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="wm">Plano Épico de Crescimento – Heitor Santos 2026 | Pág. 4</div>
+</div>
+
+</body>
+</html>
