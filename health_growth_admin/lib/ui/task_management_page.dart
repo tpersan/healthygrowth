@@ -32,6 +32,13 @@ class _TaskManagementPageState extends State<TaskManagementPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text("Gerenciar tarefas"),
+        actions: [
+          IconButton(
+            tooltip: "Carregar modelo Health Growth",
+            icon: const Icon(Icons.auto_awesome),
+            onPressed: () => _seedDefaultPlan(context),
+          ),
+        ],
         bottom: TabBar(
           controller: tabController,
           tabs: const [
@@ -59,6 +66,15 @@ class _TaskManagementPageState extends State<TaskManagementPage>
           );
         },
       ),
+    );
+  }
+
+  Future<void> _seedDefaultPlan(BuildContext context) async {
+    await service.seedHealthGrowthPlan();
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Modelo Health Growth carregado")),
     );
   }
 
@@ -144,6 +160,10 @@ class _PillarsTab extends StatelessWidget {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: service.getPillars(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _ErrorMessage(error: snapshot.error);
+        }
+
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -193,26 +213,51 @@ class _PillarsTab extends StatelessWidget {
   Future<void> _showTaskDialog(BuildContext context, String pillarId) async {
     final titleController = TextEditingController();
     final pointsController = TextEditingController(text: "1");
+    var scheduleType = _everydaySchedule;
+    var selectedWeekdays = <int>{DateTime.now().weekday};
 
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text("Nova tarefa"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Nome"),
-                textCapitalization: TextCapitalization.sentences,
-              ),
-              TextField(
-                controller: pointsController,
-                decoration: const InputDecoration(labelText: "Pontos"),
-                keyboardType: TextInputType.number,
-              ),
-            ],
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: const InputDecoration(labelText: "Nome"),
+                      textCapitalization: TextCapitalization.sentences,
+                    ),
+                    TextField(
+                      controller: pointsController,
+                      decoration: const InputDecoration(labelText: "Valor R\$"),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 12),
+                    _ScheduleEditor(
+                      scheduleType: scheduleType,
+                      selectedWeekdays: selectedWeekdays,
+                      onScheduleTypeChanged: (value) {
+                        setDialogState(() => scheduleType = value);
+                      },
+                      onWeekdayChanged: (weekday, selected) {
+                        setDialogState(() {
+                          if (selected) {
+                            selectedWeekdays.add(weekday);
+                          } else {
+                            selectedWeekdays.remove(weekday);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           actions: [
             TextButton(
@@ -224,11 +269,17 @@ class _PillarsTab extends StatelessWidget {
                 final title = titleController.text.trim();
                 final points = int.tryParse(pointsController.text.trim()) ?? 0;
                 if (title.isEmpty || points <= 0) return;
+                if (scheduleType == _customSchedule &&
+                    selectedWeekdays.isEmpty) {
+                  return;
+                }
 
                 await service.createTask(
                   pillarId: pillarId,
                   title: title,
                   points: points,
+                  scheduleType: scheduleType,
+                  weekdays: _weekdaysForSave(scheduleType, selectedWeekdays),
                 );
                 if (!dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
@@ -256,6 +307,13 @@ class _TaskList extends StatelessWidget {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: service.getTasks(pillarId),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: _ErrorMessage(error: snapshot.error),
+          );
+        }
+
         if (!snapshot.hasData) {
           return const Padding(
             padding: EdgeInsets.all(16),
@@ -279,14 +337,26 @@ class _TaskList extends StatelessWidget {
             final data = task.data();
             final title = data['title']?.toString() ?? task.id;
             final points = _parsePoints(data['points']);
+            final scheduleType =
+                data['scheduleType']?.toString() ?? _everydaySchedule;
+            final weekdays = _parseWeekdays(data['weekdays']);
 
             return ListTile(
               title: Text(title),
-              subtitle: Text(task.id),
+              subtitle: Text(
+                "${_scheduleLabel(scheduleType, weekdays)}\n${task.id}",
+              ),
+              isThreeLine: true,
               trailing: TextButton.icon(
-                onPressed: () => _showPointsDialog(context, task.id, points),
+                onPressed: () => _showTaskSettingsDialog(
+                  context,
+                  task.id,
+                  points,
+                  scheduleType,
+                  weekdays,
+                ),
                 icon: const Icon(Icons.edit),
-                label: Text("$points pts"),
+                label: Text("R\$$points"),
               ),
             );
           }).toList(),
@@ -295,22 +365,56 @@ class _TaskList extends StatelessWidget {
     );
   }
 
-  Future<void> _showPointsDialog(
+  Future<void> _showTaskSettingsDialog(
     BuildContext context,
     String taskId,
     int currentPoints,
+    String currentScheduleType,
+    Set<int> currentWeekdays,
   ) async {
     final pointsController = TextEditingController(text: "$currentPoints");
+    var scheduleType = currentScheduleType;
+    var selectedWeekdays = currentWeekdays.isEmpty
+        ? <int>{DateTime.now().weekday}
+        : {...currentWeekdays};
 
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text("Editar pontos"),
-          content: TextField(
-            controller: pointsController,
-            decoration: const InputDecoration(labelText: "Pontos"),
-            keyboardType: TextInputType.number,
+          title: const Text("Editar tarefa"),
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: pointsController,
+                      decoration: const InputDecoration(labelText: "Valor R\$"),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 12),
+                    _ScheduleEditor(
+                      scheduleType: scheduleType,
+                      selectedWeekdays: selectedWeekdays,
+                      onScheduleTypeChanged: (value) {
+                        setDialogState(() => scheduleType = value);
+                      },
+                      onWeekdayChanged: (weekday, selected) {
+                        setDialogState(() {
+                          if (selected) {
+                            selectedWeekdays.add(weekday);
+                          } else {
+                            selectedWeekdays.remove(weekday);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           actions: [
             TextButton(
@@ -321,11 +425,21 @@ class _TaskList extends StatelessWidget {
               onPressed: () async {
                 final points = int.tryParse(pointsController.text.trim()) ?? 0;
                 if (points <= 0) return;
+                if (scheduleType == _customSchedule &&
+                    selectedWeekdays.isEmpty) {
+                  return;
+                }
 
                 await service.updateTaskPoints(
                   pillarId: pillarId,
                   taskId: taskId,
                   points: points,
+                );
+                await service.updateTaskSchedule(
+                  pillarId: pillarId,
+                  taskId: taskId,
+                  scheduleType: scheduleType,
+                  weekdays: _weekdaysForSave(scheduleType, selectedWeekdays),
                 );
                 if (!dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
@@ -351,6 +465,10 @@ class _SuggestionsTab extends StatelessWidget {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: service.getPendingSuggestions(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return _ErrorMessage(error: snapshot.error);
+        }
+
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -425,7 +543,7 @@ class _SuggestionsTab extends StatelessWidget {
               const SizedBox(height: 12),
               TextField(
                 controller: pointsController,
-                decoration: const InputDecoration(labelText: "Pontos"),
+                decoration: const InputDecoration(labelText: "Valor R\$"),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -468,6 +586,69 @@ const _pillarColors = {
   "Vermelho": Colors.red,
 };
 
+const _everydaySchedule = "everyday";
+const _customSchedule = "custom";
+const _weekdayLabels = {
+  1: "Seg",
+  2: "Ter",
+  3: "Qua",
+  4: "Qui",
+  5: "Sex",
+  6: "Sab",
+  7: "Dom",
+};
+
+class _ScheduleEditor extends StatelessWidget {
+  const _ScheduleEditor({
+    required this.scheduleType,
+    required this.selectedWeekdays,
+    required this.onScheduleTypeChanged,
+    required this.onWeekdayChanged,
+  });
+
+  final String scheduleType;
+  final Set<int> selectedWeekdays;
+  final ValueChanged<String> onScheduleTypeChanged;
+  final void Function(int weekday, bool selected) onWeekdayChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SegmentedButton<String>(
+          segments: const [
+            ButtonSegment(
+              value: _everydaySchedule,
+              label: Text("Todos os dias"),
+            ),
+            ButtonSegment(value: _customSchedule, label: Text("Dias")),
+          ],
+          selected: {scheduleType},
+          onSelectionChanged: (values) {
+            onScheduleTypeChanged(values.first);
+          },
+        ),
+        if (scheduleType == _customSchedule) ...[
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            children: _weekdayLabels.entries.map((entry) {
+              return FilterChip(
+                label: Text(entry.value),
+                selected: selectedWeekdays.contains(entry.key),
+                onSelected: (selected) {
+                  onWeekdayChanged(entry.key, selected);
+                },
+              );
+            }).toList(),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 Color _parseColor(Object? value) {
   if (value is int) return Color(value);
   if (value is num) return Color(value.toInt());
@@ -479,4 +660,51 @@ int _parsePoints(Object? value) {
   if (value is num) return value.toInt();
   if (value is String) return int.tryParse(value) ?? 0;
   return 0;
+}
+
+Set<int> _parseWeekdays(Object? value) {
+  if (value is Iterable) {
+    return value
+        .map((item) {
+          if (item is int) return item;
+          if (item is num) return item.toInt();
+          return int.tryParse(item.toString()) ?? 0;
+        })
+        .where((weekday) => weekday >= 1 && weekday <= 7)
+        .toSet();
+  }
+
+  return {};
+}
+
+List<int> _weekdaysForSave(String scheduleType, Set<int> weekdays) {
+  if (scheduleType == _everydaySchedule) return <int>[];
+  final sorted = weekdays.toList()..sort();
+  return sorted;
+}
+
+String _scheduleLabel(String scheduleType, Set<int> weekdays) {
+  if (scheduleType != _customSchedule || weekdays.isEmpty) {
+    return "Todos os dias";
+  }
+
+  final sorted = weekdays.toList()..sort();
+  return sorted.map((weekday) => _weekdayLabels[weekday]).join(", ");
+}
+
+class _ErrorMessage extends StatelessWidget {
+  const _ErrorMessage({required this.error});
+
+  final Object? error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        "Erro ao carregar dados: $error",
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 }

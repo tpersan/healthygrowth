@@ -1,11 +1,11 @@
 {
-    "name": "health_growth_admin",
-    "short_name": "health_growth_admin",
+    "name": "Health Growth Admin",
+    "short_name": "HG Admin",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Health Growth Admin - Gerenciamento de tarefas e progresso",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
