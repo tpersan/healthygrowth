@@ -1,77 +1,143 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/firestore_service.dart';
+import 'package:intl/intl.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final service = FirestoreService();
+
+  String getToday() {
+    return DateFormat('yyyy-MM-dd').format(DateTime.now());
+  }
+
+  void showSuggestionDialog() {
+    String title = "";
+    String pillarId = "estudo";
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Sugerir nova tarefa"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                onChanged: (v) => title = v,
+                decoration: const InputDecoration(labelText: "Nome da tarefa"),
+              ),
+              DropdownButton<String>(
+                value: pillarId,
+                onChanged: (v) => pillarId = v!,
+                items: ["estudo", "saude", "rotina"]
+                    .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                    .toList(),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await service.suggestTask(title, pillarId);
+                if (!context.mounted) return;
+                Navigator.pop(context);
+              },
+              child: const Text("Enviar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final service = FirestoreService();
+    String today = getToday();
 
     return Scaffold(
       appBar: AppBar(title: const Text("Health Growth 🎮")),
-      body: StreamBuilder(
+      floatingActionButton: FloatingActionButton(
+        onPressed: showSuggestionDialog,
+        child: const Icon(Icons.add),
+      ),
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: service.getPillars(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) {
+        builder: (context, pillarSnap) {
+          if (!pillarSnap.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          var pillars = snapshot.data.docs;
+          return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: service.getProgress(today),
+            builder: (context, progressSnap) {
+              Map<String, dynamic> data = {};
+              if (progressSnap.hasData && progressSnap.data!.exists) {
+                data = progressSnap.data!.data() ?? {};
+              }
 
-          return ListView(
-            children: pillars.map<Widget>((pillar) {
-              return buildPillar(pillar, service);
-            }).toList(),
+              final pillars = pillarSnap.data!.docs;
+
+              return ListView(
+                children: pillars.map<Widget>((pillar) {
+                  return buildPillar(pillar, data, today);
+                }).toList(),
+              );
+            },
           );
         },
       ),
     );
   }
 
-  Widget buildPillar(dynamic pillar, FirestoreService service) {
-    Color color = Color(pillar['color']);
+  Widget buildPillar(
+    QueryDocumentSnapshot<Map<String, dynamic>> pillar,
+    Map<String, dynamic> progress,
+    String today,
+  ) {
+    final pillarData = pillar.data();
+    final color = Color(pillarData['color'] as int);
 
     return Card(
       margin: const EdgeInsets.all(12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              pillar['title'],
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              pillarData['title'] as String,
+              style: TextStyle(fontWeight: FontWeight.bold, color: color),
             ),
-            const SizedBox(height: 10),
-            StreamBuilder(
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: service.getTasks(pillar.id),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) return Container();
+              builder: (context, taskSnap) {
+                if (!taskSnap.hasData) return Container();
 
-                var tasks = snapshot.data.docs;
+                final tasks = taskSnap.data!.docs;
 
                 return Column(
                   children: tasks.map<Widget>((task) {
-                    return ListTile(
-                      leading: Checkbox(
-                        value: false,
-                        onChanged: (value) {},
-                      ),
-                      title: Text(task['title']),
-                      trailing: Text("+${task['points']}"),
+                    final taskData = task.data();
+                    final checked = progress[task.id] as bool? ?? false;
+
+                    return CheckboxListTile(
+                      value: checked,
+                      title: Text(taskData['title'] as String),
+                      subtitle: Text("+${taskData['points']}"),
+                      onChanged: (value) {
+                        service.saveProgress(task.id, today, value ?? false);
+                      },
                     );
                   }).toList(),
                 );
               },
-            )
+            ),
           ],
         ),
       ),

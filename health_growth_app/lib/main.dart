@@ -9,14 +9,16 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.home});
+
+  final Widget? home;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Health Growth',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomePage(),
+      home: home ?? const HomePage(),
     );
   }
 }
