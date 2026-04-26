@@ -63,16 +63,15 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
           if (snapshot.hasError) {
             return _ErrorMessage(error: snapshot.error);
           }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final data = snapshot.data!.exists
+          // Proteção: permitir visualização mesmo sem dados
+          final data = snapshot.hasData && snapshot.data!.exists
               ? snapshot.data!.data() ?? <String, dynamic>{}
               : <String, dynamic>{};
           final goal = data['goal']?.toString() ?? '';
-          final percentByDay =
-              (data['percentByDay'] as Map<String, dynamic>?) ?? {};
+          final percentByDayRaw = data['percentByDay'];
+          final percentByDay = percentByDayRaw is Map<String, dynamic>
+              ? percentByDayRaw
+              : <String, dynamic>{};
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -110,9 +109,9 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
                     children: [
                       Text(
                         'Texto da meta',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -120,9 +119,7 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
                           Expanded(
                             child: Text(
                               goal.isEmpty ? 'Nenhuma meta definida' : goal,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
+                              style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: goal.isEmpty ? Colors.grey : null,
@@ -132,11 +129,8 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
                           IconButton(
                             tooltip: 'Editar meta',
                             icon: const Icon(Icons.edit),
-                            onPressed: () => _showGoalDialog(
-                              context,
-                              weekKey,
-                              goal,
-                            ),
+                            onPressed: () =>
+                                _showGoalDialog(context, weekKey, goal),
                           ),
                         ],
                       ),
@@ -160,8 +154,7 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
                       ),
                       const SizedBox(height: 12),
                       ..._weekDays.map((day) {
-                        final dateKey =
-                            DateFormat('yyyy-MM-dd').format(day);
+                        final dateKey = DateFormat('yyyy-MM-dd').format(day);
                         final pct =
                             (percentByDay[dateKey] as num?)?.toDouble() ?? 0;
                         final label = DateFormat(
@@ -296,9 +289,9 @@ class _DayPercentTileState extends State<_DayPercentTile> {
               width: 90,
               child: Text(
                 widget.label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             Expanded(
@@ -319,9 +312,9 @@ class _DayPercentTileState extends State<_DayPercentTile> {
                   onChanged: widget.isFuture
                       ? null
                       : (v) => setState(() {
-                            _editing = true;
-                            _localPct = v;
-                          }),
+                          _editing = true;
+                          _localPct = v;
+                        }),
                   onChangeEnd: widget.isFuture
                       ? null
                       : (v) async {

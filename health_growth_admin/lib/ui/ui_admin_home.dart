@@ -79,9 +79,7 @@ class _AdminHomeState extends State<AdminHome> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const WeeklyGoalPage(),
-                ),
+                MaterialPageRoute(builder: (context) => const WeeklyGoalPage()),
               );
             },
           ),
@@ -128,9 +126,7 @@ class _AdminHomeState extends State<AdminHome> {
                           const SizedBox(width: 8),
                           Text(
                             'Saldo acumulado: R\$$total',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
+                            style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -155,8 +151,7 @@ class _AdminHomeState extends State<AdminHome> {
                           children: pillarPoints.entries.map((e) {
                             return Text(
                               '${e.key}: R\$${_parsePoints(e.value)}',
-                              style:
-                                  Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodySmall,
                             );
                           }).toList(),
                         ),
@@ -361,4 +356,3 @@ class _ErrorMessage extends StatelessWidget {
     );
   }
 }
-
