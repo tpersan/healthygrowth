@@ -7,7 +7,7 @@ class FirestoreService {
   final db = FirebaseFirestore.instance;
 
   // ========== PILARES ==========
-  
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getPillars() {
     return db.collection('pillars').snapshots();
   }
@@ -47,22 +47,30 @@ class FirestoreService {
   }
 
   // ========== MISSÕES ESPECÍFICAS POR PILAR ==========
-  
+
   // Pilar 1 - ESTUDO (Meta: R$2.000)
   Future<void> completeStudySession() async {
     await _addMission('estudo_sessao', 'Sessão de estudo 40min', 3, 'estudo');
   }
 
   Future<void> completeReading() async {
-    await _addMission('estudo_leitura', 'Leitura/resumo/exercícios', 2, 'estudo');
+    await _addMission(
+      'estudo_leitura',
+      'Leitura/resumo/exercícios',
+      2,
+      'estudo',
+    );
   }
 
   Future<void> completeNota(double nota) async {
     int pontos = 0;
-    if (nota >= 10) pontos = 40;
-    else if (nota >= 9) pontos = 30;
-    else if (nota >= 8) pontos = 20;
-    
+    if (nota >= 10) {
+      pontos = 40;
+    } else if (nota >= 9)
+      pontos = 30;
+    else if (nota >= 8)
+      pontos = 20;
+
     if (pontos > 0) {
       await _addMission('estudo_nota', 'Nota $nota', pontos, 'estudo');
     }
@@ -103,7 +111,12 @@ class FirestoreService {
   }
 
   Future<void> completeMesaPronta() async {
-    await _addMission('rotina_mesa', 'Mesa pronta/ajudar refeição', 1, 'rotinas');
+    await _addMission(
+      'rotina_mesa',
+      'Mesa pronta/ajudar refeição',
+      1,
+      'rotinas',
+    );
   }
 
   Future<void> completeGuardarRoupas() async {
@@ -111,7 +124,12 @@ class FirestoreService {
   }
 
   Future<void> completeMochila() async {
-    await _addMission('rotina_mochila', 'Mochila do dia seguinte', 1, 'rotinas');
+    await _addMission(
+      'rotina_mochila',
+      'Mochila do dia seguinte',
+      1,
+      'rotinas',
+    );
   }
 
   Future<void> completeLouca() async {
@@ -119,41 +137,81 @@ class FirestoreService {
   }
 
   Future<void> completeLixo() async {
-    await _addMission('rotina_lixo', 'Tirar lixo banheiros + coco', 4, 'rotinas');
+    await _addMission(
+      'rotina_lixo',
+      'Tirar lixo banheiros + coco',
+      4,
+      'rotinas',
+    );
   }
 
   Future<void> completeTarefaExtra() async {
-    await _addMission('rotina_extra', 'Tarefa extra de autonomia', 2, 'rotinas');
+    await _addMission(
+      'rotina_extra',
+      'Tarefa extra de autonomia',
+      2,
+      'rotinas',
+    );
   }
 
   // ========== BÔNUS SEMANAIS ==========
-  
+
   Future<void> completeSemanaEstudo() async {
-    await _addMission('bonus_semana_estudo', 'Semana completa de estudo', 15, 'estudo');
+    await _addMission(
+      'bonus_semana_estudo',
+      'Semana completa de estudo',
+      15,
+      'estudo',
+    );
   }
 
   Future<void> completeSemanaSaudavel() async {
-    await _addMission('bonus_semana_saudavel', 'Semana saudável completa', 15, 'saude');
+    await _addMission(
+      'bonus_semana_saudavel',
+      'Semana saudável completa',
+      15,
+      'saude',
+    );
   }
 
   Future<void> completeSemanaRotinas() async {
-    await _addMission('bonus_semana_rotinas', 'Semana completa de rotinas', 15, 'rotinas');
+    await _addMission(
+      'bonus_semana_rotinas',
+      'Semana completa de rotinas',
+      15,
+      'rotinas',
+    );
   }
 
   Future<void> completeSemanaElite() async {
-    await _addMission('bonus_semana_elite', 'Semana de Elite (+20 acertos)', 30, 'saude');
+    await _addMission(
+      'bonus_semana_elite',
+      'Semana de Elite (+20 acertos)',
+      30,
+      'saude',
+    );
   }
 
   Future<void> completeRecovery() async {
-    await _addMission('bonus_recovery', 'Recuperação de strike no fim de semana', 10, 'estudo');
+    await _addMission(
+      'bonus_recovery',
+      'Recuperação de strike no fim de semana',
+      10,
+      'estudo',
+    );
   }
 
   Future<void> completeChefaoSemana() async {
-    await _addMission('bonus_chefao', 'Chefão da semana (+R$100)', 100, 'geral');
+    await _addMission(
+      'bonus_chefao',
+      'Chefão da semana (+R\$100)',
+      100,
+      'geral',
+    );
   }
 
   // ========== COMBOS ==========
-  
+
   Future<void> completeCombo3dias() async {
     await _addMission('combo_3', 'Combo 3 dias', 5, 'geral');
   }
@@ -167,18 +225,15 @@ class FirestoreService {
   }
 
   // ========== PENALIDADES ==========
-  
+
   Future<void> applyPenalty(String tipo, int valor) async {
     await db.collection('penalties').doc(_todayKey()).set({
-      tipo: {
-        'valor': valor,
-        'data': FieldValue.serverTimestamp(),
-      },
+      tipo: {'valor': valor, 'data': FieldValue.serverTimestamp()},
     }, SetOptions(merge: true));
   }
 
   // ========== SUGESTÕES ==========
-  
+
   Future<void> suggestTask(String title, String pillarId) async {
     await db.collection('suggestions').add({
       "title": title,
@@ -189,7 +244,7 @@ class FirestoreService {
   }
 
   // ========== HISTÓRICO E ESTATÍSTICAS ==========
-  
+
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStats() {
     return db.collection('users').doc('heitor').snapshots();
   }
@@ -209,8 +264,13 @@ class FirestoreService {
   }
 
   // ========== HELPERS ==========
-  
-  Future<void> _addMission(String id, String titulo, int pontos, String pilar) async {
+
+  Future<void> _addMission(
+    String id,
+    String titulo,
+    int pontos,
+    String pilar,
+  ) async {
     await db.collection('progress').doc(_todayKey()).set({
       id: {
         'title': titulo,

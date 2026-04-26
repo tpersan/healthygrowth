@@ -309,19 +309,43 @@ class _HomePageState extends State<HomePage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _LevelRow(level: "Lv 1 🍔", points: "R$500", desc: "Início oficial"),
-              _LevelRow(level: "Lv 2 🎬", points: "R$1.500", desc: "Rotina estabelecida"),
-              _LevelRow(level: "Lv 3 🎁", points: "R$2.500", desc: "Metade do caminho"),
-              _LevelRow(level: "Lv 4 🎯", points: "R$3.500", desc: "Objetivo palpável"),
-              _LevelRow(level: "Lv 5 🎮", points: "R$4.500", desc: "Switch garantido"),
-              _LevelRow(level: "MAX ⭐", points: "R$4.501+", desc: "Game vencido"),
+              _LevelRow(
+                level: "Lv 1 ",
+                points: "R\$500",
+                desc: "Início oficial",
+              ),
+              _LevelRow(
+                level: "Lv 2 ",
+                points: "R\$1.500",
+                desc: "Rotina estabelecida",
+              ),
+              _LevelRow(
+                level: "Lv 3 🎁",
+                points: "R\$2.500",
+                desc: "Metade do caminho",
+              ),
+              _LevelRow(
+                level: "Lv 4 🎯",
+                points: "R\$3.500",
+                desc: "Objetivo palpável",
+              ),
+              _LevelRow(
+                level: "Lv 5 🎮",
+                points: "R\$4.500",
+                desc: "Switch garantido",
+              ),
+              _LevelRow(
+                level: "MAX ⭐",
+                points: "R\$4.501+",
+                desc: "Game vencido",
+              ),
               Divider(),
               Text(
-                "Meta principal: R$5.000 (Switch)",
+                "Meta principal: R\$5.000 (Switch)",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "Teto do game: R$5.000/ano",
+                "Teto do game: R\$5.000/ano",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ],
@@ -429,8 +453,8 @@ class _MissionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPenalty = points < 0;
-    final color = isPenalty 
-        ? Colors.red 
+    final color = isPenalty
+        ? Colors.red
         : (checked ? Colors.green : Colors.grey);
 
     return CheckboxListTile(
@@ -444,10 +468,7 @@ class _MissionTile extends StatelessWidget {
       ),
       subtitle: Text(
         isPenalty ? "R\$$points" : "+R\$$points",
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: color, fontWeight: FontWeight.bold),
       ),
       activeColor: color,
       onChanged: onChanged,
