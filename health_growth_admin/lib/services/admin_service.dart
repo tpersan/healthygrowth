@@ -388,27 +388,22 @@ final _defaultPillars = [
     color: 0xFF1E88E5,
     target: 2000,
     tasks: const [
+      // Missões diárias
       _DefaultTask(
         id: "sessao_estudo_40_min",
-        title: "Sessao de estudo de 40 min",
+        title: "Sessão de estudo de 40 min",
         value: 3,
         scheduleType: "custom",
         weekdays: [1, 2, 3, 4, 5],
       ),
       _DefaultTask(
         id: "leitura_resumo_exercicios",
-        title: "Leitura, resumo ou exercicios",
+        title: "Leitura, resumo ou exercícios",
         value: 2,
         scheduleType: "custom",
         weekdays: [1, 2, 3, 4, 5],
       ),
-      _DefaultTask(
-        id: "recuperacao_fim_de_semana",
-        title: "Recuperacao de estudo no fim de semana",
-        value: 10,
-        scheduleType: "custom",
-        weekdays: [6, 7],
-      ),
+      // Bônus semanal
       _DefaultTask(
         id: "semana_completa_estudo",
         title: "Semana completa de estudo",
@@ -416,17 +411,56 @@ final _defaultPillars = [
         scheduleType: "custom",
         weekdays: [5],
       ),
+      // Recuperação
+      _DefaultTask(
+        id: "recuperacao_fim_de_semana",
+        title: "Recuperação de strike no fim de semana",
+        value: 10,
+        scheduleType: "custom",
+        weekdays: [6, 7],
+      ),
+      // Notas escolares
+      _DefaultTask(
+        id: "nota_8",
+        title: "Nota 8 ou mais",
+        value: 20,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      _DefaultTask(
+        id: "nota_9",
+        title: "Nota 9",
+        value: 30,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      _DefaultTask(
+        id: "nota_10",
+        title: "Nota 10",
+        value: 40,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      // Chefão das notas - desbloqueia ao bater 5 notas 10
+      _DefaultTask(
+        id: "chefao_notas",
+        title: "Chefão das notas (5 notas 10)",
+        value: 150,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
     ],
   ),
   _DefaultPillar(
     id: "crescimento_saudavel",
-    title: "Crescimento saudavel",
+    title: "Crescimento Saudável",
     color: 0xFF43A047,
     target: 1500,
     tasks: const [
+      // Alimentação
       _DefaultTask(
         id: "cafe_da_manha_completo",
-        title: "Cafe da manha completo",
+        title: "Café da manhã completo",
         value: 2,
         scheduleType: "everyday",
         weekdays: [],
@@ -440,25 +474,27 @@ final _defaultPillars = [
       ),
       _DefaultTask(
         id: "agua_garrafa_concluida",
-        title: "Agua / garrafa concluida",
+        title: "Água / garrafa concluída (2L)",
         value: 1,
         scheduleType: "everyday",
         weekdays: [],
       ),
+      // Sono e tela
       _DefaultTask(
         id: "sono_ate_2230",
-        title: "Dormir ate 22:30 e nao passar das 11h",
+        title: "Dormir até 22:30",
         value: 2,
         scheduleType: "everyday",
         weekdays: [],
       ),
       _DefaultTask(
         id: "sem_tela_apos_21",
-        title: "Sem tela apos as 21:00",
+        title: "Sem tela após as 21:00",
         value: 1,
         scheduleType: "everyday",
         weekdays: [],
       ),
+      // Movimento
       _DefaultTask(
         id: "treino_movimento",
         title: "Treino e movimento do dia",
@@ -466,17 +502,26 @@ final _defaultPillars = [
         scheduleType: "custom",
         weekdays: [1, 2, 3, 4, 5],
       ),
+      // Bônus semanal
       _DefaultTask(
         id: "semana_saudavel_completa",
-        title: "Semana saudavel completa",
+        title: "Semana saudável completa",
         value: 15,
         scheduleType: "custom",
         weekdays: [7],
       ),
       _DefaultTask(
         id: "semana_de_elite",
-        title: "Semana de Elite acima de 20 acertos",
+        title: "Semana de Elite (+20 acertos)",
         value: 30,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      // Bonus delivery a cada 15 dias
+      _DefaultTask(
+        id: "bonus_delivery",
+        title: "Bônus delivery especial (15 dias)",
+        value: 0,
         scheduleType: "custom",
         weekdays: [7],
       ),
@@ -484,10 +529,11 @@ final _defaultPillars = [
   ),
   _DefaultPillar(
     id: "rotinas_autonomia",
-    title: "Rotinas e autonomia",
+    title: "Rotinas e Autonomia",
     color: 0xFFFB8C00,
     target: 1500,
     tasks: const [
+      // Diárias
       _DefaultTask(
         id: "arrumar_cama",
         title: "Arrumar cama",
@@ -504,7 +550,7 @@ final _defaultPillars = [
       ),
       _DefaultTask(
         id: "mesa_ajudar_refeicao",
-        title: "Mesa pronta / ajudar refeicao",
+        title: "Mesa pronta / ajudar refeição",
         value: 1,
         scheduleType: "everyday",
         weekdays: [],
@@ -525,7 +571,7 @@ final _defaultPillars = [
       ),
       _DefaultTask(
         id: "comer_a_mesa_lavar_prato",
-        title: "Comer a mesa e lavar o prato 2x ao dia",
+        title: "Comer na mesa e lavar o prato 2x",
         value: 1,
         scheduleType: "everyday",
         weekdays: [],
@@ -537,26 +583,95 @@ final _defaultPillars = [
         scheduleType: "everyday",
         weekdays: [],
       ),
+      // Tarefas fixas da semana
       _DefaultTask(
         id: "lixo_banheiros_bela",
-        title: "Tirar lixo dos banheiros + coco da Bela",
+        title: "Tirar lixo banheiros + coco da Bela",
         value: 4,
         scheduleType: "custom",
         weekdays: [1, 3, 5],
       ),
       _DefaultTask(
         id: "lavar_louca_almoco",
-        title: "Lavar louca do almoco",
+        title: "Lavar louça do almoço",
         value: 3,
         scheduleType: "custom",
         weekdays: [2, 4],
       ),
+      // Bônus semanal
       _DefaultTask(
         id: "semana_completa_rotinas",
         title: "Semana completa de rotinas",
         value: 15,
         scheduleType: "custom",
         weekdays: [7],
+      ),
+    ],
+  ),
+  // Pilares de Bônus e Combos
+  _DefaultPillar(
+    id: "bonus",
+    title: "Bônus e Combos",
+    color: 0xFF9C27B0,
+    target: 0,
+    tasks: const [
+      _DefaultTask(
+        id: "combo_3_dias",
+        title: "Combo 3 dias",
+        value: 5,
+        scheduleType: "custom",
+        weekdays: [3, 7],
+      ),
+      _DefaultTask(
+        id: "combo_7_dias",
+        title: "Combo 7 dias",
+        value: 15,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      _DefaultTask(
+        id: "combo_14_dias",
+        title: "Combo 14 dias",
+        value: 40,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+      _DefaultTask(
+        id: "chefao_semana",
+        title: "Chefão da semana (perfeita)",
+        value: 100,
+        scheduleType: "custom",
+        weekdays: [7],
+      ),
+    ],
+  ),
+  // Pilares de Penalidades
+  _DefaultPillar(
+    id: "penalidades",
+    title: "Penalidades",
+    color: 0xFFE53935,
+    target: 0,
+    tasks: const [
+      _DefaultTask(
+        id: "mentir",
+        title: "Mentir",
+        value: -10,
+        scheduleType: "custom",
+        weekdays: [1, 2, 3, 4, 5, 6, 7],
+      ),
+      _DefaultTask(
+        id: "quebrar_regra",
+        title: "Quebrar regra combinada",
+        value: -5,
+        scheduleType: "custom",
+        weekdays: [1, 2, 3, 4, 5, 6, 7],
+      ),
+      _DefaultTask(
+        id: "dia_zerado",
+        title: "Dia zerado sem esforço",
+        value: -2,
+        scheduleType: "custom",
+        weekdays: [1, 2, 3, 4, 5, 6, 7],
       ),
     ],
   ),

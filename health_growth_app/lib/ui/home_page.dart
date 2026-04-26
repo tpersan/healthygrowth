@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 
 import '../services/firestore_service.dart';
 
+/// Health Growth - Heitor
+/// Baseado em: Growth_Saudavel-prototipo revisado.pdf
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -127,7 +130,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Health Growth - ${today.label}")),
+      appBar: AppBar(
+        title: Text("Health Growth - ${today.label}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.emoji_events),
+            tooltip: "Níveis e Pontos",
+            onPressed: () => _showLevelsDialog(context),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: showSuggestionDialog,
         child: const Icon(Icons.add),
@@ -182,6 +194,7 @@ class _HomePageState extends State<HomePage> {
   ) {
     final pillarData = pillar.data();
     final color = Color(pillarData['color'] as int);
+    final pillarTitle = pillarData['title'] as String;
 
     return Card(
       margin: const EdgeInsets.all(12),
@@ -190,9 +203,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text(
-              pillarData['title'] as String,
-              style: TextStyle(fontWeight: FontWeight.bold, color: color),
+              pillarTitle,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: color,
+                fontSize: 18,
+              ),
             ),
+            const SizedBox(height: 8),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: service.getTasks(pillar.id),
               builder: (context, taskSnap) {
@@ -223,10 +241,10 @@ class _HomePageState extends State<HomePage> {
                     final taskData = task.data();
                     final checked = _progressChecked(progress[task.id]);
 
-                    return CheckboxListTile(
-                      value: checked,
-                      title: Text(taskData['title'] as String),
-                      subtitle: Text("+R\$${taskData['points']}"),
+                    return _MissionTile(
+                      title: taskData['title'] as String,
+                      points: _parsePoints(taskData['points']),
+                      checked: checked,
                       onChanged: (value) {
                         _saveTaskProgress(
                           task.id,
@@ -278,6 +296,44 @@ class _HomePageState extends State<HomePage> {
       title: title,
       points: points,
       value: value,
+    );
+  }
+
+  void _showLevelsDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("🎮 Níveis do Game"),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _LevelRow(level: "Lv 1 🍔", points: "R$500", desc: "Início oficial"),
+              _LevelRow(level: "Lv 2 🎬", points: "R$1.500", desc: "Rotina estabelecida"),
+              _LevelRow(level: "Lv 3 🎁", points: "R$2.500", desc: "Metade do caminho"),
+              _LevelRow(level: "Lv 4 🎯", points: "R$3.500", desc: "Objetivo palpável"),
+              _LevelRow(level: "Lv 5 🎮", points: "R$4.500", desc: "Switch garantido"),
+              _LevelRow(level: "MAX ⭐", points: "R$4.501+", desc: "Game vencido"),
+              Divider(),
+              Text(
+                "Meta principal: R$5.000 (Switch)",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Teto do game: R$5.000/ano",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Fechar"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -354,3 +410,74 @@ const _weekdayNames = {
   6: "Sabado",
   7: "Domingo",
 };
+
+// ========== WIDGETS AUXILIARES ==========
+
+class _MissionTile extends StatelessWidget {
+  const _MissionTile({
+    required this.title,
+    required this.points,
+    required this.checked,
+    required this.onChanged,
+  });
+
+  final String title;
+  final int points;
+  final bool checked;
+  final ValueChanged<bool?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final isPenalty = points < 0;
+    final color = isPenalty 
+        ? Colors.red 
+        : (checked ? Colors.green : Colors.grey);
+
+    return CheckboxListTile(
+      value: checked,
+      title: Text(
+        title,
+        style: TextStyle(
+          color: checked ? Colors.grey : null,
+          decoration: checked ? TextDecoration.lineThrough : null,
+        ),
+      ),
+      subtitle: Text(
+        isPenalty ? "R\$$points" : "+R\$$points",
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      activeColor: color,
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _LevelRow extends StatelessWidget {
+  const _LevelRow({
+    required this.level,
+    required this.points,
+    required this.desc,
+  });
+
+  final String level;
+  final String points;
+  final String desc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(level, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(points),
+          Text(desc, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+}
