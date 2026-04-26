@@ -36,6 +36,44 @@ class AdminService {
     return db.collection('progress').orderBy(FieldPath.documentId).snapshots();
   }
 
+  // ========== METAS SEMANAIS ==========
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getWeeklyGoal(
+    String weekKey,
+  ) {
+    return db.collection('weekly_goals').doc(weekKey).snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getWeeklyGoals() {
+    return db
+        .collection('weekly_goals')
+        .orderBy(FieldPath.documentId, descending: true)
+        .limit(12)
+        .snapshots();
+  }
+
+  Future<void> setWeeklyGoalText({
+    required String weekKey,
+    required String goal,
+  }) async {
+    await db.collection('weekly_goals').doc(weekKey).set({
+      'goal': goal,
+      'createdBy': 'admin',
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  Future<void> setWeeklyGoalPercent({
+    required String weekKey,
+    required String dateKey,
+    required num percent,
+  }) async {
+    await db.collection('weekly_goals').doc(weekKey).set({
+      'percentByDay.$dateKey': percent.clamp(0, 100),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
   Future<void> createPillar({required String title, required int color}) async {
     final id = _slugify(title);
     await db.collection('pillars').doc(id).set({
@@ -160,11 +198,159 @@ class AdminService {
   }
 
   Future<void> approveTask(String date, String taskId) async {
-    await _updateProgressEntry(date, taskId, {'status': 'approved'});
+    final docRef = db.collection('progress').doc(date);
+    final userRef = db.collection('users').doc('heitor');
+
+    await db.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      final data = snapshot.data();
+      final entry = _progressEntryMap(data?[taskId]);
+      final wasApproved = entry['status'] == 'approved';
+      entry['status'] = 'approved';
+      transaction.set(docRef, {taskId: entry}, SetOptions(merge: true));
+
+      if (!wasApproved) {
+        final points = _parsePoints(entry['points']);
+        final pillar = entry['pillar']?.toString() ?? 'geral';
+        if (points != 0) {
+          transaction.set(
+            userRef,
+            {
+              'pillarPoints.$pillar': FieldValue.increment(points),
+              'totalPoints': FieldValue.increment(points),
+              'updatedAt': FieldValue.serverTimestamp(),
+            },
+            SetOptions(merge: true),
+          );
+        }
+      }
+    });
   }
 
   Future<void> rejectTask(String date, String taskId) async {
-    await _updateProgressEntry(date, taskId, {'status': 'rejected'});
+    final docRef = db.collection('progress').doc(date);
+    final userRef = db.collection('users').doc('heitor');
+
+    await db.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+      final data = snapshot.data();
+      final entry = _progressEntryMap(data?[taskId]);
+      final wasApproved = entry['status'] == 'approved';
+      entry['status'] = 'rejected';
+      transaction.set(docRef, {taskId: entry}, SetOptions(merge: true));
+
+      if (wasApproved) {
+        final points = _parsePoints(entry['points']);
+        final pillar = entry['pillar']?.toString() ?? 'geral';
+        if (points != 0) {
+          transaction.set(
+            userRef,
+            {
+              'pillarPoints.$pillar': FieldValue.increment(-points),
+              'totalPoints': FieldValue.increment(-points),
+              'updatedAt': FieldValue.serverTimestamp(),
+            },
+            SetOptions(merge: true),
+          );
+        }
+      }
+    });
+  }
+
+  /// Aplica uma penalidade manualmente (lançamento direto aprovado)
+  Future<void> applyPenaltyEntry({
+    required String date,
+    required String category,
+    required int amount,
+    String? description,
+  }) async {
+    final id = 'penalty_${DateTime.now().millisecondsSinceEpoch}';
+    final userRef = db.collection('users').doc('heitor');
+    final docRef = db.collection('progress').doc(date);
+
+    final batch = db.batch();
+    batch.set(
+      docRef,
+      {
+        id: {
+          'value': true,
+          'title': description ?? category,
+          'points': amount,
+          'status': 'approved',
+          'paid': false,
+          'pillar': 'penalidades',
+          'isPenalty': true,
+          'category': category,
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+      },
+      SetOptions(merge: true),
+    );
+    batch.set(
+      userRef,
+      {
+        'pillarPoints.penalidades': FieldValue.increment(amount),
+        'totalPoints': FieldValue.increment(amount),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+    await batch.commit();
+  }
+
+  /// Incrementa o contador de notas 10 e verifica o Chefão das Notas
+  Future<void> incrementNote10Count() async {
+    final userRef = db.collection('users').doc('heitor');
+    await userRef.set(
+      {
+        'note10count': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  /// Retorna stream do documento do usuário (contém totalPoints, pillarPoints, note10count)
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStatsStream() {
+    return db.collection('users').doc('heitor').snapshots();
+  }
+
+  /// Calcula o total acumulado de todos os tempos (aprovados)
+  Future<int> calculateTotalPoints() async {
+    final snapshot = await db.collection('progress').get();
+    int total = 0;
+    for (final doc in snapshot.docs) {
+      for (final entry in doc.data().values) {
+        if (entry is Map &&
+            entry['status'] == 'approved' &&
+            entry['value'] == true) {
+          total += _parsePoints(entry['points']);
+        }
+      }
+    }
+    return total;
+  }
+
+  /// Lê a reflexão semanal
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getWeeklyReflection(
+    String weekKey,
+  ) {
+    return db.collection('weekly_reflections').doc(weekKey).snapshots();
+  }
+
+  /// Salva a reflexão semanal
+  Future<void> saveWeeklyReflection({
+    required String weekKey,
+    required String pillarUp,
+    required String obstacle,
+    required String simplify,
+  }) async {
+    await db.collection('weekly_reflections').doc(weekKey).set({
+      'pillarUp': pillarUp,
+      'obstacle': obstacle,
+      'simplify': simplify,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
   Future<void> createManualEntry({

@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../services/admin_service.dart';
+import 'penalties_page.dart';
 import 'response_payments_page.dart';
 import 'task_charts_page.dart';
 import 'task_management_page.dart';
+import 'weekly_goal_page.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -15,32 +17,6 @@ class AdminHome extends StatefulWidget {
 
 class _AdminHomeState extends State<AdminHome> {
   final service = AdminService();
-  int weeklyPoints = 0;
-  String? pointsError;
-
-  @override
-  void initState() {
-    super.initState();
-    loadPoints();
-  }
-
-  Future<void> loadPoints() async {
-    try {
-      final pts = await service.calculateWeeklyPoints();
-      if (!mounted) return;
-
-      setState(() {
-        weeklyPoints = pts;
-        pointsError = null;
-      });
-    } catch (error) {
-      if (!mounted) return;
-
-      setState(() {
-        pointsError = error.toString();
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +24,16 @@ class _AdminHomeState extends State<AdminHome> {
       appBar: AppBar(
         title: const Text("ADM"),
         actions: [
+          IconButton(
+            tooltip: "Penalidades",
+            icon: const Icon(Icons.warning_amber_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PenaltiesPage()),
+              );
+            },
+          ),
           IconButton(
             tooltip: "Lancamento manual",
             icon: const Icon(Icons.add_card),
@@ -87,32 +73,101 @@ class _AdminHomeState extends State<AdminHome> {
               );
             },
           ),
+          IconButton(
+            tooltip: "Meta semanal",
+            icon: const Icon(Icons.flag),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WeeklyGoalPage(),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Text(
-                  "Total aprovado na semana: R\$$weeklyPoints",
-                  style: const TextStyle(fontSize: 20),
-                ),
-                if (pointsError != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      pointsError!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                      textAlign: TextAlign.center,
+          // Painel de stats do Heitor (Stream)
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: service.getUserStatsStream(),
+            builder: (context, snap) {
+              if (snap.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    'Erro ao carregar stats: ${snap.error}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
-              ],
-            ),
+                );
+              }
+              // Proteção contra dados nulos
+              final data = snap.hasData && snap.data!.exists
+                  ? snap.data!.data() ?? <String, dynamic>{}
+                  : <String, dynamic>{};
+              final total = _parsePoints(data['totalPoints']);
+              final note10 = _parsePoints(data['note10count']);
+              final pillarPointsRaw = data['pillarPoints'];
+              final pillarPoints = pillarPointsRaw is Map<String, dynamic>
+                  ? pillarPointsRaw
+                  : <String, dynamic>{};
+
+              return Card(
+                margin: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.account_balance_wallet, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Saldo acumulado: R\$$total',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      if (note10 > 0) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          '⭐ Notas 10: $note10 / 5${note10 >= 5 ? " → Chefão das Notas +R\$150!" : ""}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: note10 >= 5 ? Colors.amber[700] : null,
+                          ),
+                        ),
+                      ],
+                      if (pillarPoints.isNotEmpty) ...[
+                        const SizedBox(height: 6),
+                        const Divider(height: 1),
+                        const SizedBox(height: 6),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 4,
+                          children: pillarPoints.entries.map((e) {
+                            return Text(
+                              '${e.key}: R\$${_parsePoints(e.value)}',
+                              style:
+                                  Theme.of(context).textTheme.bodySmall,
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
+          // Lista de tarefas pendentes (Stream)
           Expanded(
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: service.getPendingProgress(),
@@ -176,8 +231,6 @@ class _AdminHomeState extends State<AdminHome> {
                                     icon: const Icon(Icons.close),
                                     onPressed: () async {
                                       await service.rejectTask(doc.id, taskId);
-                                      if (!mounted) return;
-                                      await loadPoints();
                                     },
                                   ),
                                   IconButton(
@@ -185,8 +238,6 @@ class _AdminHomeState extends State<AdminHome> {
                                     icon: const Icon(Icons.check),
                                     onPressed: () async {
                                       await service.approveTask(doc.id, taskId);
-                                      if (!mounted) return;
-                                      await loadPoints();
                                     },
                                   ),
                                 ],
@@ -264,7 +315,6 @@ class _AdminHomeState extends State<AdminHome> {
                 );
                 if (!dialogContext.mounted) return;
                 Navigator.pop(dialogContext);
-                await loadPoints();
               },
               child: const Text("Salvar"),
             ),
@@ -311,3 +361,4 @@ class _ErrorMessage extends StatelessWidget {
     );
   }
 }
+

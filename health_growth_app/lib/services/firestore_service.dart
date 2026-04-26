@@ -26,23 +26,34 @@ class FirestoreService {
     return db.collection('progress').doc(_todayKey()).snapshots();
   }
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getProgressForDate(
+    String dateKey,
+  ) {
+    return db.collection('progress').doc(dateKey).snapshots();
+  }
+
   Future<void> saveTodayProgress({
     required String taskId,
     required String title,
     required int points,
     required bool value,
     String pillar = 'estudo',
+    String? rejectionReason,
   }) async {
+    final data = <String, Object>{
+      'value': value,
+      'title': title,
+      'points': points,
+      'status': value ? 'pending' : 'unchecked',
+      'pillar': pillar,
+      'paid': false,
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    if (rejectionReason != null && !value) {
+      data['rejectionReason'] = rejectionReason;
+    }
     await db.collection('progress').doc(_todayKey()).set({
-      taskId: {
-        'value': value,
-        'title': title,
-        'points': points,
-        'status': value ? 'pending' : 'unchecked',
-        'pillar': pillar,
-        'paid': false,
-        'updatedAt': FieldValue.serverTimestamp(),
-      },
+      taskId: data,
     }, SetOptions(merge: true));
   }
 
@@ -66,10 +77,11 @@ class FirestoreService {
     int pontos = 0;
     if (nota >= 10) {
       pontos = 40;
-    } else if (nota >= 9)
+    } else if (nota >= 9) {
       pontos = 30;
-    else if (nota >= 8)
+    } else if (nota >= 8) {
       pontos = 20;
+    }
 
     if (pontos > 0) {
       await _addMission('estudo_nota', 'Nota $nota', pontos, 'estudo');
@@ -260,6 +272,57 @@ class FirestoreService {
     await db.collection('users').doc('heitor').set({
       'totalPoints': pontos,
       'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  // ========== METAS SEMANAIS ==========
+
+  /// Collection: weekly_goals
+  /// Cada documento: id = yyyy-ww (ano-semana, ex: "2026-17")
+  /// Campos:
+  ///   - goal: String (nome/descrição da meta)
+  ///   - percentByDay: Map<String, num> (chave: yyyy-MM-dd, valor: 0-100)
+  ///   - createdBy: String (admin)
+  ///   - createdAt: Timestamp
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getWeeklyGoal(String weekKey) {
+    return db.collection('weekly_goals').doc(weekKey).snapshots();
+  }
+
+  Future<void> setWeeklyGoalPercent({
+    required String weekKey,
+    required String dateKey,
+    required num percent,
+    required String goal,
+    String createdBy = 'admin',
+  }) async {
+    await db.collection('weekly_goals').doc(weekKey).set({
+      'goal': goal,
+      'createdBy': createdBy,
+      'createdAt': FieldValue.serverTimestamp(),
+      'percentByDay.$dateKey': percent,
+    }, SetOptions(merge: true));
+  }
+
+  // ========== REFLEXÃO SEMANAL ==========
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getWeeklyReflection(
+    String weekKey,
+  ) {
+    return db.collection('weekly_reflections').doc(weekKey).snapshots();
+  }
+
+  Future<void> saveWeeklyReflection({
+    required String weekKey,
+    required String pillarUp,
+    required String obstacle,
+    required String simplify,
+  }) async {
+    await db.collection('weekly_reflections').doc(weekKey).set({
+      'pillarUp': pillarUp,
+      'obstacle': obstacle,
+      'simplify': simplify,
+      'updatedAt': Timestamp.now(),
     }, SetOptions(merge: true));
   }
 

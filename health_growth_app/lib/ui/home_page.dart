@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../services/firestore_service.dart';
+import '../theme/app_theme.dart';
 
 /// Health Growth - Heitor
 /// Baseado em: Growth_Saudavel-prototipo revisado.pdf
@@ -18,17 +20,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final service = FirestoreService();
-  late _TodayInfo today;
+  late DateTime _today;
+  late DateTime _selectedDate;
   Timer? _todayTimer;
 
   @override
   void initState() {
     super.initState();
-    today = getToday();
+    _today = _truncateDate(DateTime.now());
+    _selectedDate = _today;
     _todayTimer = Timer.periodic(const Duration(minutes: 1), (_) {
-      final currentToday = getToday();
-      if (currentToday.key == today.key) return;
-      setState(() => today = currentToday);
+      final newToday = _truncateDate(DateTime.now());
+      if (_isSameDay(newToday, _today)) return;
+      setState(() {
+        _today = newToday;
+        _selectedDate = newToday;
+      });
     });
   }
 
@@ -38,223 +45,741 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  _TodayInfo getToday() {
-    final now = DateTime.now();
-    return _TodayInfo(
-      key: DateFormat('yyyy-MM-dd').format(now),
-      weekday: now.weekday,
-      label:
-          "${_weekdayNames[now.weekday]}, ${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}",
-    );
+  DateTime _truncateDate(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  bool get _isToday => _isSameDay(_selectedDate, _today);
+
+  String get _selectedKey => DateFormat('yyyy-MM-dd').format(_selectedDate);
+
+  String get _greetingText {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Bom dia, Heitor! ☀️';
+    if (hour < 18) return 'Boa tarde, Heitor! 🌤️';
+    return 'Boa noite, Heitor! 🌙';
   }
 
-  void showSuggestionDialog() {
-    String title = "";
+  String _motivationalMessage(int done, int total) {
+    if (total == 0) return 'Sem tarefas agendadas.';
+    if (done == 0) return 'Vamos começar! 💪';
+    if (done == total) return 'Você arrasou! Dia 100%! 🔥';
+    if (done / total >= 0.75) return 'Quase lá! Continue assim! 🚀';
+    if (done / total >= 0.5) return 'Mais da metade! Não para agora! ⚡';
+    return 'Você pode mais! Bora! 💥';
+  }
+
+  void _previousDay() => setState(
+    () => _selectedDate = _selectedDate.subtract(const Duration(days: 1)),
+  );
+
+  void _nextDay() {
+    if (_isToday) return;
+    setState(() => _selectedDate = _selectedDate.add(const Duration(days: 1)));
+  }
+
+  void _backToToday() => setState(() => _selectedDate = _today);
+
+  String _formatSelectedDate() {
+    if (_isToday) return 'Hoje';
+    final yesterday = _today.subtract(const Duration(days: 1));
+    if (_isSameDay(_selectedDate, yesterday)) return 'Ontem';
+    return DateFormat("EEE, dd/MM/yyyy", 'pt_BR').format(_selectedDate);
+  }
+
+  void _showSuggestionDialog() {
+    String title = '';
     String? pillarId;
 
     showDialog<void>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Sugerir nova tarefa"),
-          content: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: service.getPillars(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SizedBox(
-                  width: 240,
-                  height: 80,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
+      builder: (ctx) => AlertDialog(
+        title: const Text('💡 Sugerir nova missão'),
+        content: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: service.getPillars(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox(
+                width: 240,
+                height: 80,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+            final pillars = snapshot.data!.docs;
+            if (pillars.isEmpty) return const Text('Nenhum pilar cadastrado.');
+            pillarId ??= pillars.first.id;
 
-              final pillars = snapshot.data!.docs;
-              if (pillars.isEmpty) {
-                return const Text("Nenhum pilar cadastrado ainda");
-              }
-
-              pillarId ??= pillars.first.id;
-
-              return StatefulBuilder(
-                builder: (context, setDialogState) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        onChanged: (v) => title = v,
-                        decoration: const InputDecoration(
-                          labelText: "Nome da tarefa",
-                        ),
-                      ),
-                      DropdownButtonFormField<String>(
-                        initialValue: pillarId,
-                        decoration: const InputDecoration(labelText: "Pilar"),
-                        items: pillars.map((pillar) {
-                          final data = pillar.data();
-                          final title = data['title']?.toString() ?? pillar.id;
-
-                          return DropdownMenuItem(
-                            value: pillar.id,
-                            child: Text(title),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value == null) return;
-                          setDialogState(() => pillarId = value);
-                        },
-                      ),
-                    ],
-                  );
-                },
+            return StatefulBuilder(
+              builder: (context, setDS) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    onChanged: (v) => title = v,
+                    decoration: const InputDecoration(
+                      labelText: 'Nome da missão',
+                      prefixIcon: Icon(Icons.task_alt),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    initialValue: pillarId,
+                    decoration: const InputDecoration(labelText: 'Pilar'),
+                    items: pillars.map((p) {
+                      final d = p.data();
+                      return DropdownMenuItem(
+                        value: p.id,
+                        child: Text(d['title']?.toString() ?? p.id),
+                      );
+                    }).toList(),
+                    onChanged: (v) {
+                      if (v == null) return;
+                      setDS(() => pillarId = v);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final p = pillarId;
+              if (title.trim().isEmpty || p == null) return;
+              await service.suggestTask(title.trim(), p);
+              if (!ctx.mounted) return;
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(ctx).showSnackBar(
+                const SnackBar(
+                  content: Text('Sugestão enviada! ✅'),
+                  backgroundColor: AppColors.success,
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             },
+            child: const Text('Enviar'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                final selectedPillar = pillarId;
-                if (title.trim().isEmpty || selectedPillar == null) return;
+        ],
+      ),
+    );
+  }
 
-                await service.suggestTask(title.trim(), selectedPillar);
-                if (!context.mounted) return;
-                Navigator.pop(context);
-              },
-              child: const Text("Enviar"),
+  void _showLevelsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('🎮 Níveis do Game'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            _LevelRow(
+              icon: '�',
+              level: 'Nível 1',
+              points: 'R\$500',
+              desc: 'Início oficial da jornada',
+            ),
+            _LevelRow(
+              icon: '🎬',
+              level: 'Nível 2',
+              points: 'R\$1.500',
+              desc: 'O ritmo virou rotina',
+            ),
+            _LevelRow(
+              icon: '🎁',
+              level: 'Nível 3',
+              points: 'R\$2.500',
+              desc: 'Metade do caminho',
+            ),
+            _LevelRow(
+              icon: '🎯',
+              level: 'Nível 4',
+              points: 'R\$3.500',
+              desc: 'Objetivo palpável',
+            ),
+            _LevelRow(
+              icon: '🎮',
+              level: 'Nível 5',
+              points: 'R\$4.500',
+              desc: 'Switch garantido',
+            ),
+            _LevelRow(
+              icon: '⭐',
+              level: 'MAX',
+              points: 'R\$4.501+',
+              desc: 'Game vencido!',
+            ),
+            Divider(height: 24),
+            Row(
+              children: [
+                Icon(Icons.emoji_events, color: AppColors.accent, size: 18),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Meta: R\$5.000 (Nintendo Switch)',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             ),
           ],
-        );
-      },
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Health Growth - ${today.label}"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.emoji_events),
-            tooltip: "Níveis e Pontos",
-            onPressed: () => _showLevelsDialog(context),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: showSuggestionDialog,
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: colorScheme.surfaceContainerLowest,
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: service.getPillars(),
         builder: (context, pillarSnap) {
           if (pillarSnap.hasError) {
-            return _ErrorMessage(error: pillarSnap.error);
+            return _ErrorView(error: pillarSnap.error);
           }
-
           if (!pillarSnap.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            key: ValueKey(today.key),
-            stream: service.getTodayProgress(),
-            builder: (context, progressSnap) {
-              if (progressSnap.hasError) {
-                return _ErrorMessage(error: progressSnap.error);
-              }
-
-              if (!progressSnap.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              final progress = progressSnap.data!.exists
-                  ? progressSnap.data!.data() ?? <String, dynamic>{}
+            stream: service.getUserStats(),
+            builder: (context, statsSnap) {
+              // Proteção contra dados nulos
+              final statsData = statsSnap.hasData && statsSnap.data!.exists
+                  ? statsSnap.data!.data() ?? <String, dynamic>{}
                   : <String, dynamic>{};
-              final pillars = pillarSnap.data!.docs;
+              final pillarPointsRaw = statsData['pillarPoints'];
+              final pillarPoints = pillarPointsRaw is Map<String, dynamic>
+                  ? pillarPointsRaw
+                  : <String, dynamic>{};
+                stream: service.getProgressForDate(_selectedKey),
+                builder: (context, progressSnap) {
+                  if (progressSnap.hasError) {
+                    return _ErrorView(error: progressSnap.error);
+                  }
+                  // Proteção: se não tem dados, usar mapa vazio
+                  final progress = progressSnap.hasData && progressSnap.data!.exists
+                      ? progressSnap.data!.data() ?? <String, dynamic>{}
+                      : <String, dynamic>{};
+                  final pillars = pillarSnap.data!.docs;
 
-              return ListView(
-                children: [
-                  _TodayHeader(today: today),
-                  ...pillars.map<Widget>((pillar) {
-                    return buildPillar(pillar, progress, today);
-                  }),
-                ],
+                  return _HomeBody(
+                    service: service,
+                    selectedDate: _selectedDate,
+                    selectedKey: _selectedKey,
+                    isToday: _isToday,
+                    pillars: pillars,
+                    progress: progress,
+                    pillarPoints: pillarPoints,
+                    greeting: _greetingText,
+                    motivational: _motivationalMessage,
+                    formattedDate: _formatSelectedDate(),
+                    onPreviousDay: _previousDay,
+                    onNextDay: _nextDay,
+                    onBackToToday: _backToToday,
+                    onSuggest: _showSuggestionDialog,
+                    onLevels: _showLevelsDialog,
+                  );
+                },
               );
             },
           );
         },
       ),
+      floatingActionButton: _isToday
+          ? FloatingActionButton.extended(
+              onPressed: _showSuggestionDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Sugerir missão'),
+            )
+          : null,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// BODY
+// ─────────────────────────────────────────────
+
+class _HomeBody extends StatelessWidget {
+  const _HomeBody({
+    required this.service,
+    required this.selectedDate,
+    required this.selectedKey,
+    required this.isToday,
+    required this.pillars,
+    required this.progress,
+    required this.pillarPoints,
+    required this.greeting,
+    required this.motivational,
+    required this.formattedDate,
+    required this.onPreviousDay,
+    required this.onNextDay,
+    required this.onBackToToday,
+    required this.onSuggest,
+    required this.onLevels,
+  });
+
+  final FirestoreService service;
+  final DateTime selectedDate;
+  final String selectedKey;
+  final bool isToday;
+  final List<QueryDocumentSnapshot<Map<String, dynamic>>> pillars;
+  final Map<String, dynamic> progress;
+  final Map<String, dynamic> pillarPoints;
+  final String greeting;
+  final String Function(int done, int total) motivational;
+  final String formattedDate;
+  final VoidCallback onPreviousDay;
+  final VoidCallback onNextDay;
+  final VoidCallback onBackToToday;
+  final VoidCallback onSuggest;
+  final VoidCallback onLevels;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        _buildAppBar(context),
+        SliverToBoxAdapter(child: _buildDateNav(context)),
+        if (!isToday) SliverToBoxAdapter(child: _buildReadOnlyBanner(context)),
+        SliverToBoxAdapter(child: _buildSummaryCard(context)),
+        ...pillars.map(
+          (pillar) => SliverToBoxAdapter(
+            child: _PillarCard(
+              pillar: pillar,
+              progress: progress,
+              isToday: isToday,
+              selectedDate: selectedDate,
+              service: service,
+              accumulatedPoints: _parsePoints(pillarPoints[pillar.id]),
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 100)),
+      ],
     );
   }
 
-  Widget buildPillar(
-    QueryDocumentSnapshot<Map<String, dynamic>> pillar,
-    Map<String, dynamic> progress,
-    _TodayInfo today,
-  ) {
-    final pillarData = pillar.data();
-    final color = Color(pillarData['color'] as int);
-    final pillarTitle = pillarData['title'] as String;
-
-    return Card(
-      margin: const EdgeInsets.all(12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Text(
-              pillarTitle,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: color,
-                fontSize: 18,
+  SliverAppBar _buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      expandedHeight: 140,
+      floating: false,
+      pinned: true,
+      backgroundColor: AppColors.primary,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.primary, AppColors.primaryDark],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 64, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    greeting,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '🎮 Health Growth Mode: ON',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
+          ),
+        ),
+        title: const Text(
+          'Health Growth',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+        ),
+        titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.restaurant_menu, color: Colors.white),
+          tooltip: 'Guia alimentar',
+          onPressed: () => _showFoodGuideDialog(context),
+        ),
+        IconButton(
+          icon: const Icon(Icons.emoji_events, color: Colors.white),
+          tooltip: 'Níveis do Game',
+          onPressed: onLevels,
+        ),
+      ],
+    );
+  }
+
+  void _showFoodGuideDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('🥗 Guia: Conta x Não Conta'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              _FoodRow(
+                meal: '☀️ Café',
+                yes: 'Fruta, ovo, iogurte, tapioca',
+                no: 'Biscoito, sucrilhos, refri, guaravita',
+              ),
+              Divider(height: 16),
+              _FoodRow(
+                meal: '🍽️ Almoço',
+                yes: 'Arroz, feijão, proteína, salada',
+                no: 'Fritura / processado',
+              ),
+              Divider(height: 16),
+              _FoodRow(
+                meal: '🍎 Lanche',
+                yes: 'Fruta, sanduíche natural, iogurte, leite',
+                no: 'Chips / biscoito recheado',
+              ),
+              Divider(height: 16),
+              _FoodRow(
+                meal: '🌙 Jantar',
+                yes: 'Arroz, feijão, proteína + salada',
+                no: 'Junk food / iFood',
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateNav(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Row(
+        children: [
+          IconButton.filledTonal(
+            onPressed: onPreviousDay,
+            icon: const Icon(Icons.chevron_left),
+            tooltip: 'Dia anterior',
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: isToday ? null : onBackToToday,
+              child: Column(
+                children: [
+                  Text(
+                    formattedDate,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  if (!isToday)
+                    Text(
+                      'Toque para voltar a hoje',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: scheme.primary),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          IconButton.filledTonal(
+            onPressed: isToday ? null : onNextDay,
+            icon: const Icon(Icons.chevron_right),
+            tooltip: 'Próximo dia',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReadOnlyBanner(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.accent.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.accent.withValues(alpha: 0.4)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.history, color: AppColors.accent, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Visualizando histórico — não é possível editar',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.accent,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard(BuildContext context) {
+    int done = 0;
+    int total = 0;
+
+    for (final entry in progress.entries) {
+      final v = entry.value;
+      if (v is Map) {
+        total++;
+        if (v['value'] == true) done++;
+      }
+    }
+
+    final pct = total == 0 ? 0.0 : done / total;
+    final msg = motivational(done, total);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              _ProgressRing(value: pct, size: 72),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$done de $total missões',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      msg,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// PILLAR CARD
+// ─────────────────────────────────────────────
+
+class _PillarCard extends StatelessWidget {
+  const _PillarCard({
+    required this.pillar,
+    required this.progress,
+    required this.isToday,
+    required this.selectedDate,
+    required this.service,
+    required this.accumulatedPoints,
+  });
+
+  final QueryDocumentSnapshot<Map<String, dynamic>> pillar;
+  final Map<String, dynamic> progress;
+  final bool isToday;
+  final DateTime selectedDate;
+  final FirestoreService service;
+  final int accumulatedPoints;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = pillar.data();
+    // Proteção contra dados nulos do pilar
+    final color = data['color'] != null 
+        ? Color(data['color'] as int) 
+        : const Color(0xFF7C3AED);
+    final title = data['title'] as String? ?? pillar.id;
+    final target = (data['target'] as num?)?.toInt() ?? 0;
+    final icon = _pillarIcon(pillar.id);
+    final hasTarget = target > 0;
+    final progress_ = hasTarget
+        ? (accumulatedPoints / target).clamp(0.0, 1.0)
+        : 0.0;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header com gradiente e barra de progresso do pilar
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color, color.withValues(alpha: 0.65)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(icon, style: const TextStyle(fontSize: 22)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ),
+                      if (hasTarget)
+                        Text(
+                          'R\$$accumulatedPoints',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                    ],
+                  ),
+                  if (hasTarget) ...[
+                    const SizedBox(height: 8),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: progress_,
+                        minHeight: 6,
+                        backgroundColor: Colors.white24,
+                        valueColor: const AlwaysStoppedAnimation(Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'R\$$accumulatedPoints / R\$$target',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelSmall?.copyWith(color: Colors.white60),
+                    ),
+                  ],
+                ],
+              ),
+            ),
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: service.getTasks(pillar.id),
               builder: (context, taskSnap) {
                 if (taskSnap.hasError) {
-                  return _ErrorMessage(error: taskSnap.error);
+                  return _ErrorView(error: taskSnap.error);
                 }
-
                 if (!taskSnap.hasData) {
                   return const Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: EdgeInsets.all(16),
                     child: LinearProgressIndicator(),
                   );
                 }
 
-                final tasks = taskSnap.data!.docs.where((task) {
-                  return _taskAppearsToday(task.data(), today.weekday);
+                final weekday = selectedDate.weekday;
+                final tasks = taskSnap.data!.docs.where((t) {
+                  return _taskAppearsOnDay(t.data(), weekday);
                 }).toList();
 
                 if (tasks.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Text("Nenhuma tarefa para hoje"),
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.grey,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Nenhuma missão para este dia',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   );
                 }
 
-                return Column(
-                  children: tasks.map<Widget>((task) {
-                    final taskData = task.data();
-                    final checked = _progressChecked(progress[task.id]);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Column(
+                    children: tasks.map<Widget>((task) {
+                      final td = task.data();
+                      // Proteção contra dados nulos da tarefa
+                      final taskTitle = td['title'] as String? ?? task.id;
+                      final taskPoints = td['points'];
+                      final checked = _progressChecked(progress[task.id]);
+                      final pts = _parsePoints(taskPoints);
 
-                    return _MissionTile(
-                      title: taskData['title'] as String,
-                      points: _parsePoints(taskData['points']),
-                      checked: checked,
-                      onChanged: (value) {
-                        _saveTaskProgress(
-                          task.id,
-                          taskData['title']?.toString() ?? task.id,
-                          _parsePoints(taskData['points']),
-                          value ?? false,
-                        );
-                      },
-                    );
-                  }).toList(),
+                      return _MissionTile(
+                        title: taskTitle,
+                        points: pts,
+                        checked: checked,
+                        readOnly: !isToday,
+                        pillarColor: color,
+                        onChanged: isToday
+                            ? (val) => service.saveTodayProgress(
+                                taskId: task.id,
+                                title: taskTitle,
+                                points: pts,
+                                value: val ?? false,
+                                pillar: pillar.id,
+                              )
+                            : null,
+                      );
+                    }).toList(),
+                  ),
                 );
               },
             ),
@@ -264,13 +789,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  bool _taskAppearsToday(Map<String, dynamic> taskData, int weekday) {
-    final scheduleType = taskData['scheduleType']?.toString() ?? 'everyday';
+  bool _taskAppearsOnDay(Map<String, dynamic> d, int weekday) {
+    final scheduleType = d['scheduleType']?.toString() ?? 'everyday';
     if (scheduleType != 'custom') return true;
-
-    final weekdays = taskData['weekdays'];
+    final weekdays = d['weekdays'];
     if (weekdays is! Iterable) return true;
-
     return weekdays.any((item) {
       if (item is int) return item == weekday;
       if (item is num) return item.toInt() == weekday;
@@ -284,83 +807,225 @@ class _HomePageState extends State<HomePage> {
     return false;
   }
 
-  void _saveTaskProgress(String taskId, String title, int points, bool value) {
-    final currentToday = getToday();
-    if (currentToday.key != today.key) {
-      setState(() => today = currentToday);
-      return;
-    }
+  String _pillarIcon(String id) {
+    final lower = id.toLowerCase();
+    if (lower.contains('estudo')) return '📚';
+    if (lower.contains('saude') || lower.contains('saúde')) return '💪';
+    if (lower.contains('rotina')) return '🏠';
+    if (lower.contains('bonus') || lower.contains('bônus')) return '⭐';
+    return '🎯';
+  }
+}
 
-    service.saveTodayProgress(
-      taskId: taskId,
-      title: title,
-      points: points,
-      value: value,
+// ─────────────────────────────────────────────
+// MISSION TILE COM ANIMAÇÃO
+// ─────────────────────────────────────────────
+
+class _MissionTile extends StatefulWidget {
+  const _MissionTile({
+    required this.title,
+    required this.points,
+    required this.checked,
+    required this.readOnly,
+    required this.pillarColor,
+    required this.onChanged,
+  });
+
+  final String title;
+  final int points;
+  final bool checked;
+  final bool readOnly;
+  final Color pillarColor;
+  final ValueChanged<bool?>? onChanged;
+
+  @override
+  State<_MissionTile> createState() => _MissionTileState();
+}
+
+class _MissionTileState extends State<_MissionTile>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
     );
+    _scale = Tween(
+      begin: 1.0,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
   }
 
-  void _showLevelsDialog(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("🎮 Níveis do Game"),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _handleChange(bool? val) {
+    if (val == true) {
+      _ctrl.forward().then((_) => _ctrl.reverse());
+    }
+    widget.onChanged?.call(val);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isPenalty = widget.points < 0;
+    final isChecked = widget.checked;
+
+    final badgeColor = isPenalty
+        ? AppColors.danger
+        : isChecked
+        ? AppColors.success
+        : widget.pillarColor;
+
+    return ScaleTransition(
+      scale: _scale,
+      child: CheckboxListTile(
+        value: isChecked,
+        onChanged: widget.readOnly ? null : _handleChange,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: isChecked ? Colors.grey : null,
+            decoration: isChecked ? TextDecoration.lineThrough : null,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
             children: [
-              _LevelRow(
-                level: "Lv 1 ",
-                points: "R\$500",
-                desc: "Início oficial",
-              ),
-              _LevelRow(
-                level: "Lv 2 ",
-                points: "R\$1.500",
-                desc: "Rotina estabelecida",
-              ),
-              _LevelRow(
-                level: "Lv 3 🎁",
-                points: "R\$2.500",
-                desc: "Metade do caminho",
-              ),
-              _LevelRow(
-                level: "Lv 4 🎯",
-                points: "R\$3.500",
-                desc: "Objetivo palpável",
-              ),
-              _LevelRow(
-                level: "Lv 5 🎮",
-                points: "R\$4.500",
-                desc: "Switch garantido",
-              ),
-              _LevelRow(
-                level: "MAX ⭐",
-                points: "R\$4.501+",
-                desc: "Game vencido",
-              ),
-              Divider(),
-              Text(
-                "Meta principal: R\$5.000 (Switch)",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Teto do game: R\$5.000/ano",
-                style: TextStyle(fontStyle: FontStyle.italic),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: badgeColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  isPenalty ? 'R\$${widget.points}' : '+R\$${widget.points}',
+                  style: TextStyle(
+                    color: badgeColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Fechar"),
-            ),
-          ],
-        );
-      },
+        ),
+        secondary: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: isChecked
+                ? AppColors.success.withValues(alpha: 0.15)
+                : Colors.grey.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: isChecked ? AppColors.success : Colors.grey,
+            size: 22,
+          ),
+        ),
+        activeColor: AppColors.success,
+        checkboxShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+        ),
+      ),
     );
   }
 }
+
+// ─────────────────────────────────────────────
+// PROGRESS RING
+// ─────────────────────────────────────────────
+
+class _ProgressRing extends StatelessWidget {
+  const _ProgressRing({required this.value, this.size = 72});
+
+  final double value;
+  final double size;
+
+  Color get _ringColor {
+    if (value >= 1.0) return AppColors.success;
+    if (value >= 0.75) return AppColors.secondary;
+    if (value >= 0.5) return AppColors.accent;
+    return AppColors.danger;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _RingPainter(value: value, color: _ringColor),
+        child: Center(
+          child: Text(
+            '${(value * 100).round()}%',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: _ringColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RingPainter extends CustomPainter {
+  const _RingPainter({required this.value, required this.color});
+
+  final double value;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final radius = (size.width / 2) - 5;
+    const stroke = 6.0;
+
+    final bgPaint = Paint()
+      ..color = color.withValues(alpha: 0.15)
+      ..strokeWidth = stroke
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final fgPaint = Paint()
+      ..color = color
+      ..strokeWidth = stroke
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(Offset(cx, cy), radius, bgPaint);
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(cx, cy), radius: radius),
+      -pi / 2,
+      2 * pi * value.clamp(0.0, 1.0),
+      false,
+      fgPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RingPainter old) =>
+      old.value != value || old.color != color;
+}
+
+// ─────────────────────────────────────────────
+// AUXILIARES
+// ─────────────────────────────────────────────
 
 int _parsePoints(Object? value) {
   if (value is int) return value;
@@ -369,44 +1034,8 @@ int _parsePoints(Object? value) {
   return 0;
 }
 
-class _TodayInfo {
-  const _TodayInfo({
-    required this.key,
-    required this.weekday,
-    required this.label,
-  });
-
-  final String key;
-  final int weekday;
-  final String label;
-}
-
-class _TodayHeader extends StatelessWidget {
-  const _TodayHeader({required this.today});
-
-  final _TodayInfo today;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(today.label, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 4),
-          Text(
-            "Tarefas e respostas somente de hoje",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ErrorMessage extends StatelessWidget {
-  const _ErrorMessage({required this.error});
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({required this.error});
 
   final Object? error;
 
@@ -414,75 +1043,40 @@ class _ErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Text(
-          "Erro ao carregar dados: $error",
-          style: TextStyle(color: Theme.of(context).colorScheme.error),
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
+            const SizedBox(height: 12),
+            Text(
+              'Erro ao carregar dados',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$error',
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-const _weekdayNames = {
-  1: "Segunda-feira",
-  2: "Terca-feira",
-  3: "Quarta-feira",
-  4: "Quinta-feira",
-  5: "Sexta-feira",
-  6: "Sabado",
-  7: "Domingo",
-};
-
-// ========== WIDGETS AUXILIARES ==========
-
-class _MissionTile extends StatelessWidget {
-  const _MissionTile({
-    required this.title,
-    required this.points,
-    required this.checked,
-    required this.onChanged,
-  });
-
-  final String title;
-  final int points;
-  final bool checked;
-  final ValueChanged<bool?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final isPenalty = points < 0;
-    final color = isPenalty
-        ? Colors.red
-        : (checked ? Colors.green : Colors.grey);
-
-    return CheckboxListTile(
-      value: checked,
-      title: Text(
-        title,
-        style: TextStyle(
-          color: checked ? Colors.grey : null,
-          decoration: checked ? TextDecoration.lineThrough : null,
-        ),
-      ),
-      subtitle: Text(
-        isPenalty ? "R\$$points" : "+R\$$points",
-        style: TextStyle(color: color, fontWeight: FontWeight.bold),
-      ),
-      activeColor: color,
-      onChanged: onChanged,
     );
   }
 }
 
 class _LevelRow extends StatelessWidget {
   const _LevelRow({
+    required this.icon,
     required this.level,
     required this.points,
     required this.desc,
   });
 
+  final String icon;
   final String level;
   final String points;
   final String desc;
@@ -490,15 +1084,103 @@ class _LevelRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(level, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(points),
-          Text(desc, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(icon, style: const TextStyle(fontSize: 18)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  level,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  desc,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              points,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppColors.accent,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// FOOD GUIDE ROW
+// ─────────────────────────────────────────────
+
+class _FoodRow extends StatelessWidget {
+  const _FoodRow({required this.meal, required this.yes, required this.no});
+
+  final String meal;
+  final String yes;
+  final String no;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          meal,
+          style: Theme.of(
+            context,
+          ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('✅ ', style: TextStyle(fontSize: 13)),
+            Expanded(
+              child: Text(
+                yes,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.success),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('❌ ', style: TextStyle(fontSize: 13)),
+            Expanded(
+              child: Text(
+                no,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.danger),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
