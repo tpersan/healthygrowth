@@ -29,7 +29,8 @@ class _WeeklyGoalPageState extends State<WeeklyGoalPage> {
   }
 
   String _weekKey(DateTime weekStart) {
-    final weekOfYear = int.parse(DateFormat('w').format(weekStart));
+    final weekStr = DateFormat('w').format(weekStart);
+    final weekOfYear = int.tryParse(weekStr) ?? 1;
     return '${weekStart.year}-$weekOfYear';
   }
 
