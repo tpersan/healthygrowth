@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
 
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
             stream: service.getUserStats(),
-            builder: (context, statsSnap) {
+            builder: (context, statsSnap) { 
               // Proteção contra dados nulos
               final statsData = statsSnap.hasData && statsSnap.data!.exists
                   ? statsSnap.data!.data() ?? <String, dynamic>{}

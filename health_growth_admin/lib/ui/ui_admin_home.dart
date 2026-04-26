@@ -192,7 +192,9 @@ class _AdminHomeState extends State<AdminHome> {
 
                 return ListView(
                   children: pendingDocs.map<Widget>((doc) {
+                    // Proteção contra dados nulos do documento
                     final data = doc.data();
+                    if (data.isEmpty) return const SizedBox.shrink();
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,9 +207,10 @@ class _AdminHomeState extends State<AdminHome> {
                           final taskId = entry.key;
                           final task = entry.value;
 
-                          if (task is Map &&
-                              task['value'] == true &&
-                              task['status'] == 'pending') {
+                          // Proteção: verificar se task é um Map válido
+                          if (task is! Map) return const SizedBox.shrink();
+                          if (task['value'] != true) return const SizedBox.shrink();
+                          if (task['status'] != 'pending') return const SizedBox.shrink();
                             final title = task['title']?.toString() ?? taskId;
                             final points = _parsePoints(task['points']);
 
