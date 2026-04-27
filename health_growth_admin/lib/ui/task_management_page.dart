@@ -184,10 +184,21 @@ class _PillarsTab extends StatelessWidget {
             final title = data['title']?.toString() ?? pillar.id;
 
             return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              clipBehavior: Clip.antiAlias,
               child: ExpansionTile(
-                leading: CircleAvatar(backgroundColor: color),
-                title: Text(title),
-                subtitle: Text(pillar.id),
+                leading: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: color.withValues(alpha: 0.15),
+                  child: Icon(Icons.category_outlined, color: color, size: 18),
+                ),
+                title: Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                subtitle: Text(pillar.id, style: const TextStyle(fontSize: 12)),
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
@@ -342,12 +353,38 @@ class _TaskList extends StatelessWidget {
             final weekdays = _parseWeekdays(data['weekdays']);
 
             return ListTile(
-              title: Text(title),
-              subtitle: Text(
-                "${_scheduleLabel(scheduleType, weekdays)}\n${task.id}",
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 4,
               ),
-              isThreeLine: true,
-              trailing: TextButton.icon(
+              leading: Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'R\$$points',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
+              title: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(
+                _scheduleLabel(scheduleType, weekdays),
+                style: const TextStyle(fontSize: 12),
+              ),
+              trailing: IconButton(
+                tooltip: 'Editar',
+                icon: const Icon(Icons.tune, size: 20),
                 onPressed: () => _showTaskSettingsDialog(
                   context,
                   task.id,
@@ -355,8 +392,6 @@ class _TaskList extends StatelessWidget {
                   scheduleType,
                   weekdays,
                 ),
-                icon: const Icon(Icons.edit),
-                label: Text("R\$$points"),
               ),
             );
           }).toList(),
@@ -489,15 +524,46 @@ class _SuggestionsTab extends StatelessWidget {
             final pillarId = data['pillarId']?.toString() ?? "";
 
             return Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: ListTile(
-                title: Text(title),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.blue.shade50,
+                  child: Icon(
+                    Icons.lightbulb_outline,
+                    color: Colors.blue.shade600,
+                  ),
+                ),
+                title: Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
                 subtitle: Text("Pilar: $pillarId"),
-                trailing: Wrap(
-                  spacing: 4,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
+                    IconButton.outlined(
+                      tooltip: "Rejeitar",
+                      icon: const Icon(Icons.close, size: 20),
+                      style: IconButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: BorderSide(color: Colors.red.shade200),
+                      ),
+                      onPressed: () => service.rejectSuggestion(suggestion.id),
+                    ),
+                    const SizedBox(width: 6),
+                    IconButton.filled(
                       tooltip: "Aprovar",
-                      icon: const Icon(Icons.check),
+                      icon: const Icon(Icons.check, size: 20),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.green.shade600,
+                        foregroundColor: Colors.white,
+                      ),
                       onPressed: pillarId.isEmpty
                           ? null
                           : () => _showApproveDialog(
@@ -506,11 +572,6 @@ class _SuggestionsTab extends StatelessWidget {
                               pillarId,
                               title,
                             ),
-                    ),
-                    IconButton(
-                      tooltip: "Rejeitar",
-                      icon: const Icon(Icons.close),
-                      onPressed: () => service.rejectSuggestion(suggestion.id),
                     ),
                   ],
                 ),

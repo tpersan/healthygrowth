@@ -22,7 +22,8 @@ class _AdminHomeState extends State<AdminHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ADM"),
+        title: const Text("Health Growth"),
+        centerTitle: false,
         actions: [
           IconButton(
             tooltip: "Penalidades",
@@ -93,7 +94,10 @@ class _AdminHomeState extends State<AdminHome> {
             builder: (context, snap) {
               if (snap.hasError) {
                 return Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Text(
                     'Erro ao carregar stats: ${snap.error}',
                     style: TextStyle(
@@ -112,46 +116,90 @@ class _AdminHomeState extends State<AdminHome> {
               final pillarPoints = pillarPointsRaw is Map<String, dynamic>
                   ? pillarPointsRaw
                   : <String, dynamic>{};
+              final cs = Theme.of(context).colorScheme;
 
               return Card(
-                margin: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                elevation: 0,
+                color: cs.primaryContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                margin: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.account_balance_wallet, size: 20),
+                          Icon(
+                            Icons.savings_rounded,
+                            color: cs.primary,
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
                           Text(
-                            'Saldo acumulado: R\$$total',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
+                            'Saldo do Heitor',
+                            style: TextStyle(
+                              color: cs.onPrimaryContainer,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'R\$ $total',
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: cs.onPrimaryContainer,
+                            ),
+                      ),
                       if (note10 > 0) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          '⭐ Notas 10: $note10 / 5${note10 >= 5 ? " → Chefão das Notas +R\$150!" : ""}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: note10 >= 5 ? Colors.amber[700] : null,
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: note10 >= 5
+                                ? Colors.amber.shade300
+                                : cs.primary.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '⭐ Notas 10: $note10 / 5${note10 >= 5 ? " → Chefão +R\$150!" : ""}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                              color: note10 >= 5
+                                  ? Colors.amber.shade900
+                                  : cs.onPrimaryContainer,
+                            ),
                           ),
                         ),
                       ],
                       if (pillarPoints.isNotEmpty) ...[
-                        const SizedBox(height: 6),
-                        const Divider(height: 1),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 12),
                         Wrap(
-                          spacing: 12,
-                          runSpacing: 4,
+                          spacing: 6,
+                          runSpacing: 6,
                           children: pillarPoints.entries.map((e) {
-                            return Text(
-                              '${e.key}: R\$${_parsePoints(e.value)}',
-                              style: Theme.of(context).textTheme.bodySmall,
+                            final val = _parsePoints(e.value);
+                            return Chip(
+                              label: Text('${e.key}: R\$$val'),
+                              labelStyle: TextStyle(
+                                fontSize: 11,
+                                color: cs.onSecondaryContainer,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              backgroundColor: cs.secondaryContainer,
+                              side: BorderSide.none,
+                              padding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
                             );
                           }).toList(),
                         ),
@@ -184,71 +232,198 @@ class _AdminHomeState extends State<AdminHome> {
                   });
                 }).toList();
 
-                if (pendingDocs.isEmpty) {
-                  return const Center(
-                    child: Text("Nenhuma resposta pendente de conferencia"),
-                  );
-                }
+                final cs = Theme.of(context).colorScheme;
 
-                return ListView(
-                  children: pendingDocs.map<Widget>((doc) {
-                    // Proteção contra dados nulos do documento
-                    final data = doc.data();
-                    if (data.isEmpty) return const SizedBox.shrink();
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          doc.id,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        ...data.entries.map((entry) {
-                          final taskId = entry.key;
-                          final task = entry.value;
-
-                          // Proteção: verificar se task é um Map válido
-                          if (task is! Map) return const SizedBox.shrink();
-                          if (task['value'] != true) return const SizedBox.shrink();
-                          if (task['status'] != 'pending') return const SizedBox.shrink();
-                            final title = task['title']?.toString() ?? taskId;
-                            final points = _parsePoints(task['points']);
-
-                            return ListTile(
-                              title: Text(title),
-                              subtitle: Text(
-                                points == 0
-                                    ? "Pendente"
-                                    : "Pendente - R\$$points",
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Pendências',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.3,
+                                  color: cs.onSurfaceVariant,
+                                ),
+                          ),
+                          if (pendingDocs.isNotEmpty) ...[
+                            const SizedBox(width: 8),
+                            Badge.count(count: pendingDocs.length),
+                          ],
+                        ],
+                      ),
+                    ),
+                    if (pendingDocs.isEmpty)
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.task_alt,
+                                size: 56,
+                                color: cs.primary.withValues(alpha: 0.35),
                               ),
-                              trailing: Wrap(
-                                spacing: 4,
+                              const SizedBox(height: 12),
+                              Text(
+                                'Tudo em dia!',
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(color: cs.onSurfaceVariant),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Nenhuma resposta pendente de conferência',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: cs.onSurfaceVariant),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                          children: pendingDocs.map<Widget>((doc) {
+                            final data = doc.data();
+                            final pendingTasks = data.entries.where((entry) {
+                              final task = entry.value;
+                              return task is Map &&
+                                  task['value'] == true &&
+                                  task['status'] == 'pending';
+                            }).toList();
+
+                            return Card(
+                              margin: const EdgeInsets.only(bottom: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  IconButton(
-                                    tooltip: "Rejeitar",
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () async {
-                                      await service.rejectTask(doc.id, taskId);
-                                    },
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 10,
+                                    ),
+                                    color: cs.surfaceContainerHighest,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_today_outlined,
+                                          size: 14,
+                                          color: cs.onSurfaceVariant,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          doc.id,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13,
+                                            color: cs.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Badge.count(
+                                          count: pendingTasks.length,
+                                          backgroundColor:
+                                              Colors.orange.shade600,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  IconButton(
-                                    tooltip: "Aprovar",
-                                    icon: const Icon(Icons.check),
-                                    onPressed: () async {
-                                      await service.approveTask(doc.id, taskId);
-                                    },
-                                  ),
+                                  ...pendingTasks.map((entry) {
+                                    final taskId = entry.key;
+                                    final task = entry.value as Map;
+                                    final title =
+                                        task['title']?.toString() ?? taskId;
+                                    final points = _parsePoints(task['points']);
+
+                                    return ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 2,
+                                          ),
+                                      title: Text(
+                                        title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      subtitle: points == 0
+                                          ? Text(
+                                              'Pendente',
+                                              style: TextStyle(
+                                                color: Colors.orange.shade700,
+                                                fontSize: 12,
+                                              ),
+                                            )
+                                          : Text(
+                                              'R\$ $points',
+                                              style: TextStyle(
+                                                color: cs.primary,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton.outlined(
+                                            tooltip: 'Rejeitar',
+                                            icon: const Icon(
+                                              Icons.close,
+                                              size: 20,
+                                            ),
+                                            style: IconButton.styleFrom(
+                                              foregroundColor: cs.error,
+                                              side: BorderSide(color: cs.error),
+                                            ),
+                                            onPressed: () async {
+                                              await service.rejectTask(
+                                                doc.id,
+                                                taskId,
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(width: 6),
+                                          IconButton.filled(
+                                            tooltip: 'Aprovar',
+                                            icon: const Icon(
+                                              Icons.check,
+                                              size: 20,
+                                            ),
+                                            style: IconButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.green.shade600,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                            onPressed: () async {
+                                              await service.approveTask(
+                                                doc.id,
+                                                taskId,
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
                                 ],
                               ),
                             );
-                          }
-
-                          return const SizedBox.shrink();
-                        }),
-                        const Divider(),
-                      ],
-                    );
-                  }).toList(),
+                          }).toList(),
+                        ),
+                      ),
+                  ],
                 );
               },
             ),

@@ -46,43 +46,151 @@ class ResponsePaymentsPage extends StatelessWidget {
           }
 
           if (items.isEmpty) {
-            return const Center(child: Text("Nenhuma resposta marcada"));
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.inbox_outlined,
+                    size: 56,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text("Nenhuma resposta marcada"),
+                ],
+              ),
+            );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(12),
-            itemCount: items.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final item = items[index];
+          final totalApproved = items
+              .where((i) => i.status == "approved")
+              .length;
+          final totalPaid = items.where((i) => i.paid).length;
+          final totalPoints = items.fold<int>(
+            0,
+            (sum, i) => sum + (i.points ?? 0),
+          );
+          final cs = Theme.of(context).colorScheme;
 
-              return FutureBuilder<AdminTaskInfo>(
-                future: service.getTaskInfo(item.taskId),
-                builder: (context, taskSnapshot) {
-                  final task = taskSnapshot.data;
-                  final title = item.title ?? task?.title ?? item.taskId;
-                  final points = item.points ?? task?.points;
-                  final status = _statusLabel(item.status);
-                  final pointsText = points == null ? "" : " - R\$$points";
+          return Column(
+            children: [
+              Card(
+                margin: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                elevation: 0,
+                color: cs.secondaryContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _StatBadge(
+                        label: 'Total',
+                        value: '${items.length}',
+                        color: cs.primary,
+                      ),
+                      _StatBadge(
+                        label: 'Aprovadas',
+                        value: '$totalApproved',
+                        color: Colors.green,
+                      ),
+                      _StatBadge(
+                        label: 'Pagas',
+                        value: '$totalPaid',
+                        color: Colors.teal,
+                      ),
+                      _StatBadge(
+                        label: 'Saldo',
+                        value: 'R\$$totalPoints',
+                        color: cs.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+                  itemCount: items.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
 
-                  return CheckboxListTile(
-                    value: item.paid,
-                    title: Text(title),
-                    subtitle: Text("${item.date} - $status$pointsText"),
-                    secondary: const Icon(Icons.payments_outlined),
-                    onChanged: item.status == "approved"
-                        ? (value) {
-                            service.setTaskPaid(
-                              date: item.date,
-                              taskId: item.taskId,
-                              paid: value ?? false,
-                            );
-                          }
-                        : null,
-                  );
-                },
-              );
-            },
+                    return FutureBuilder<AdminTaskInfo>(
+                      future: service.getTaskInfo(item.taskId),
+                      builder: (context, taskSnapshot) {
+                        final task = taskSnapshot.data;
+                        final title = item.title ?? task?.title ?? item.taskId;
+                        final points = item.points ?? task?.points;
+                        final status = _statusLabel(item.status);
+                        final statusColor = _statusColor(item.status);
+                        final pointsText = points == null
+                            ? ''
+                            : ' • R\$$points';
+
+                        return CheckboxListTile(
+                          value: item.paid,
+                          title: Text(
+                            title,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  status,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: statusColor,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '${item.date}$pointsText',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          secondary: Icon(
+                            item.paid
+                                ? Icons.check_circle
+                                : Icons.payments_outlined,
+                            color: item.paid ? Colors.green : null,
+                          ),
+                          onChanged: item.status == "approved"
+                              ? (value) {
+                                  service.setTaskPaid(
+                                    date: item.date,
+                                    taskId: item.taskId,
+                                    paid: value ?? false,
+                                  );
+                                }
+                              : null,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
       ),
@@ -156,11 +264,57 @@ String _statusLabel(String status) {
   };
 }
 
+Color _statusColor(String status) {
+  return switch (status) {
+    "approved" => Colors.green,
+    "pending" => Colors.orange,
+    "rejected" => Colors.red,
+    _ => Colors.grey,
+  };
+}
+
 int? _parsePoints(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   if (value is String) return int.tryParse(value);
   return null;
+}
+
+class _StatBadge extends StatelessWidget {
+  const _StatBadge({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class _ErrorMessage extends StatelessWidget {

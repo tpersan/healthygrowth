@@ -77,7 +77,7 @@ class _SummaryGrid extends StatelessWidget {
         crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 1.35,
+        childAspectRatio: 1.1,
       ),
       children: [
         _SummaryTile(
