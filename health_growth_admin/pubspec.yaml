@@ -23,10 +23,13 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
-    sdk: flutter
-  
+    sdk: flutter  
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
 
+flutter_icons:
+  android: true
+  image_path: "assets/icons/admin_logo.png" # ou admin no outro app
