@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'theme/app_theme.dart';
 import 'ui/app_shell.dart';
+import 'services/notification_service.dart';
 
 /// Global notifier so any widget can change the app theme.
 final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
@@ -10,6 +11,10 @@ final themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Initialize notification service
+  final notificationService = NotificationService();
+  await notificationService.initialize();
 
   // Restore saved preference before the first frame.
   final prefs = await SharedPreferences.getInstance();

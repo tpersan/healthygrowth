@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../services/admin_service.dart';
+import '../services/notification_admin_service.dart';
 
 class TaskManagementPage extends StatefulWidget {
   const TaskManagementPage({super.key});
@@ -13,6 +14,7 @@ class TaskManagementPage extends StatefulWidget {
 class _TaskManagementPageState extends State<TaskManagementPage>
     with SingleTickerProviderStateMixin {
   final service = AdminService();
+  final notificationService = NotificationAdminService();
   late final TabController tabController;
 
   @override
@@ -33,6 +35,11 @@ class _TaskManagementPageState extends State<TaskManagementPage>
       appBar: AppBar(
         title: const Text("Gerenciar tarefas"),
         actions: [
+          IconButton(
+            tooltip: "Notificações",
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () => _showNotificationDialog(context),
+          ),
           IconButton(
             tooltip: "Carregar modelo Health Growth",
             icon: const Icon(Icons.auto_awesome),
@@ -75,6 +82,15 @@ class _TaskManagementPageState extends State<TaskManagementPage>
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Modelo Health Growth carregado")),
+    );
+  }
+
+  Future<void> _showNotificationDialog(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) =>
+          _NotificationSheet(notificationService: notificationService),
     );
   }
 
@@ -766,6 +782,373 @@ class _ErrorMessage extends StatelessWidget {
         style: TextStyle(color: Theme.of(context).colorScheme.error),
         textAlign: TextAlign.center,
       ),
+    );
+  }
+}
+
+// ========== NOTIFICATION SHEET ==========
+
+class _NotificationSheet extends StatefulWidget {
+  const _NotificationSheet({required this.notificationService});
+
+  final NotificationAdminService notificationService;
+
+  @override
+  State<_NotificationSheet> createState() => _NotificationSheetState();
+}
+
+class _NotificationSheetState extends State<_NotificationSheet>
+    with SingleTickerProviderStateMixin {
+  late final TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (context, scrollController) {
+        return Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            TabBar(
+              controller: tabController,
+              tabs: const [
+                Tab(text: "Enviar"),
+                Tab(text: "Programar"),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: tabController,
+                children: [
+                  _DirectNotificationTab(
+                    service: widget.notificationService,
+                    scrollController: scrollController,
+                  ),
+                  _ScheduledNotificationTab(
+                    service: widget.notificationService,
+                    scrollController: scrollController,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _DirectNotificationTab extends StatefulWidget {
+  const _DirectNotificationTab({
+    required this.service,
+    required this.scrollController,
+  });
+
+  final NotificationAdminService service;
+  final ScrollController scrollController;
+
+  @override
+  State<_DirectNotificationTab> createState() => _DirectNotificationTabState();
+}
+
+class _DirectNotificationTabState extends State<_DirectNotificationTab> {
+  final _titleController = TextEditingController();
+  final _bodyController = TextEditingController();
+  bool _sending = false;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _bodyController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _send() async {
+    final title = _titleController.text.trim();
+    final body = _bodyController.text.trim();
+    if (title.isEmpty || body.isEmpty) return;
+
+    setState(() => _sending = true);
+
+    try {
+      await widget.service.sendDirectNotification(title: title, body: body);
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Notificação enviada!")));
+        _titleController.clear();
+        _bodyController.clear();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Erro: $e")));
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      controller: widget.scrollController,
+      padding: const EdgeInsets.all(16),
+      children: [
+        TextField(
+          controller: _titleController,
+          decoration: const InputDecoration(
+            labelText: "Título",
+            hintText: "Ex: Nova tarefa disponível!",
+          ),
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _bodyController,
+          decoration: const InputDecoration(
+            labelText: "Mensagem",
+            hintText: "Ex: Você tem uma nova tarefa para fazer hoje.",
+          ),
+          maxLines: 3,
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: _sending ? null : _send,
+          icon: _sending
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.send),
+          label: Text(_sending ? "Enviando..." : "Enviar Notificação"),
+        ),
+        const SizedBox(height: 24),
+        const Divider(),
+        const SizedBox(height: 8),
+        const Text(
+          "Ações rápidas:",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            ActionChip(
+              avatar: const Icon(Icons.check_circle, size: 18),
+              label: const Text("Tarefa Aprovada"),
+              onPressed: () {
+                _titleController.text = "✅ Tarefa Aprovada!";
+                _bodyController.text = "Uma de suas tarefas foi aprovada!";
+              },
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.cancel, size: 18),
+              label: const Text("Tarefa Rejeitada"),
+              onPressed: () {
+                _titleController.text = "❌ Tarefa Não Aprovada";
+                _bodyController.text = "Revise e tente novamente.";
+              },
+            ),
+            ActionChip(
+              avatar: const Icon(Icons.emoji_events, size: 18),
+              label: const Text("Parabéns"),
+              onPressed: () {
+                _titleController.text = "🎉 Parabéns!";
+                _bodyController.text = "Você está indo muito bem!";
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ScheduledNotificationTab extends StatefulWidget {
+  const _ScheduledNotificationTab({
+    required this.service,
+    required this.scrollController,
+  });
+
+  final NotificationAdminService service;
+  final ScrollController scrollController;
+
+  @override
+  State<_ScheduledNotificationTab> createState() =>
+      _ScheduledNotificationTabState();
+}
+
+class _ScheduledNotificationTabState extends State<_ScheduledNotificationTab> {
+  final _titleController = TextEditingController();
+  final _bodyController = TextEditingController();
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 8, minute: 0);
+  final Set<int> _selectedWeekdays = {1, 2, 3, 4, 5}; // Seg a Sex
+  bool _sending = false;
+
+  static const _weekdays = {
+    1: "Seg",
+    2: "Ter",
+    3: "Qua",
+    4: "Qui",
+    5: "Sex",
+    6: "Sáb",
+    7: "Dom",
+  };
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _bodyController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectTime() async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (time != null) {
+      setState(() => _selectedTime = time);
+    }
+  }
+
+  Future<void> _schedule() async {
+    final title = _titleController.text.trim();
+    final body = _bodyController.text.trim();
+    if (title.isEmpty || body.isEmpty) return;
+    if (_selectedWeekdays.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Selecione pelo menos um dia")),
+      );
+      return;
+    }
+
+    setState(() => _sending = true);
+
+    try {
+      await widget.service.scheduleNotification(
+        title: title,
+        body: body,
+        hour: _selectedTime.hour,
+        minute: _selectedTime.minute,
+        weekdays: _selectedWeekdays.toList()..sort(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Notificação agendada para $_selectedTime")),
+        );
+        _titleController.clear();
+        _bodyController.clear();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Erro: $e")));
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      controller: widget.scrollController,
+      padding: const EdgeInsets.all(16),
+      children: [
+        TextField(
+          controller: _titleController,
+          decoration: const InputDecoration(
+            labelText: "Título",
+            hintText: "Ex: Hora da tarefa!",
+          ),
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _bodyController,
+          decoration: const InputDecoration(
+            labelText: "Mensagem",
+            hintText: "Ex: Você tem tarefas para fazer hoje.",
+          ),
+          maxLines: 2,
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        const SizedBox(height: 16),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.access_time),
+          title: const Text("Horário"),
+          subtitle: Text(_selectedTime.format(context)),
+          onTap: _selectTime,
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          "Repetir nos dias:",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: _weekdays.entries.map((entry) {
+            final selected = _selectedWeekdays.contains(entry.key);
+            return FilterChip(
+              label: Text(entry.value),
+              selected: selected,
+              onSelected: (value) {
+                setState(() {
+                  if (value) {
+                    _selectedWeekdays.add(entry.key);
+                  } else {
+                    _selectedWeekdays.remove(entry.key);
+                  }
+                });
+              },
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: _sending ? null : _schedule,
+          icon: _sending
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.schedule),
+          label: Text(_sending ? "Agendando..." : "Agendar Notificação"),
+        ),
+      ],
     );
   }
 }
